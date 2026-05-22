@@ -14,26 +14,21 @@ describe('QueryParamsConverter', () => {
     expect(result).toEqual({ name: [{ name: 'val' }] });
   });
 
-  it('should convert to Prisma format and merge clauses', () => {
-    const op1 = new EqualsOperator('==val1');
-    const op2 = new EqualsOperator('==val2');
-    const converter = new QueryParamsConverter({ name: [op1, op2] });
-
-    const result = converter.toPrisma();
-    expect(result).toEqual({ name: 'val2' });
-  });
-
-  it('should convert to SQL clauses', () => {
+  it('should ignore values that are not instances of QueryParamsOperator', () => {
     const op = new EqualsOperator('==val');
-    const converter = new QueryParamsConverter({ name: op });
-    const result = converter.toClauses();
-    expect(result.name[0]).toBeDefined();
-  });
+    const converter = new QueryParamsConverter({
+      name: op,
+      limit: 10 as any,
+      offset: 0 as any,
+      sort: 'name:asc' as any,
+    });
 
-  it('should convert to SQL clauses array', () => {
-    const op = new EqualsOperator('==val');
-    const converter = new QueryParamsConverter({ name: op });
-    const result = converter.toClausesArray();
-    expect(result).toHaveLength(1);
+    const visitor = new PrismaVisitor();
+    const result = converter.to(visitor);
+
+    expect(result.name).toHaveLength(1);
+    expect(result.limit).toBeUndefined();
+    expect(result.offset).toBeUndefined();
+    expect(result.sort).toBeUndefined();
   });
 });

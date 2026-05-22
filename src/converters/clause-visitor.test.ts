@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { ArrayContainsOperator } from '../query-operator/array-contains-operator';
 import { ArrayIsContainedByOperator } from '../query-operator/array-is-contained-by-operator';
 import { ArrayOverlapOperator } from '../query-operator/array-overlap-operator';
@@ -20,6 +20,7 @@ import {
   ClauseArrayOverlap,
   ClauseBetween,
   ClauseEquals,
+  ClauseEmpty,
   ClauseGreaterThan,
   ClauseGreaterThanOrEquals,
   ClauseILike,
@@ -28,7 +29,7 @@ import {
   ClauseLessThanOrEquals,
   ClauseNotEquals,
   ClauseNotILike,
-  ClauseNotIn
+  ClauseNotIn,
 } from '../sql-builder/implementations';
 import { ClauseVisitor } from './clause-visitor';
 
@@ -48,13 +49,13 @@ describe('ClauseVisitor', () => {
   });
 
   it('should visit in', () => {
-    const op = new InOperator('in=v1,v2');
+    const op = new InOperator(['v1', 'v2']);
     const result = visitor.visitIn(op, 'field');
     expect(result).toBeInstanceOf(ClauseIn);
   });
 
   it('should visit not in', () => {
-    const op = new NotInOperator('out=v1,v2');
+    const op = new NotInOperator(['v1', 'v2']);
     const result = visitor.visitNotIn(op, 'field');
     expect(result).toBeInstanceOf(ClauseNotIn);
   });
@@ -101,6 +102,13 @@ describe('ClauseVisitor', () => {
     expect(result).toBeInstanceOf(ClauseBetween);
   });
 
+  it('should throw error when visiting between with invalid value format', () => {
+    const op = new BetweenOperator('btw=1');
+    expect(() => visitor.visitBetween(op, 'field')).toThrow(
+      'Invalid value for Between operator on field "field". Expected an array with 2 elements.'
+    );
+  });
+
   it('should visit array contains', () => {
     const op = new ArrayContainsOperator('ctn=[v1,v2]');
     const result = visitor.visitArrayContains(op, 'field');
@@ -123,5 +131,12 @@ describe('ClauseVisitor', () => {
     const op = new UnknownOperator('val');
     const result = visitor.visitUnknown(op, 'field');
     expect(result).toBeInstanceOf(ClauseEquals);
+  });
+
+  it('should visit unknown with null value and return ClauseEmpty', () => {
+    const op = new UnknownOperator('');
+    vi.spyOn(op, 'value').mockReturnValue(null as any);
+    const result = visitor.visitUnknown(op, 'field');
+    expect(result).toBeInstanceOf(ClauseEmpty);
   });
 });

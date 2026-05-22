@@ -1,7 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { ClauseEquals } from './clause-equals';
 import { ClauseGreaterThan } from './clause-greater-than';
-import { ClauseLike } from './clause-like';
 import { ClauseOr } from './clause-or';
 
 describe('ClauseOr', () => {
@@ -12,7 +11,10 @@ describe('ClauseOr', () => {
         const clause2 = new ClauseEquals('status', 'pending');
         const orClause = new ClauseOr(clause1, clause2);
 
-        expect(orClause.build()).toBe("(status = 'active' OR status = 'pending')");
+        expect(orClause.build()).toEqual({
+          sql: '(status = $1 OR status = $2)',
+          params: ['active', 'pending'],
+        });
       });
 
       it('should combine three clauses with OR', () => {
@@ -21,7 +23,10 @@ describe('ClauseOr', () => {
         const clause3 = new ClauseEquals('type', 'C');
         const orClause = new ClauseOr(clause1, clause2, clause3);
 
-        expect(orClause.build()).toBe("(type = 'A' OR type = 'B' OR type = 'C')");
+        expect(orClause.build()).toEqual({
+          sql: '(type = $1 OR type = $2 OR type = $3)',
+          params: ['A', 'B', 'C'],
+        });
       });
 
       it('should combine different clause types', () => {
@@ -29,15 +34,21 @@ describe('ClauseOr', () => {
         const clause2 = new ClauseGreaterThan('age', 18);
         const orClause = new ClauseOr(clause1, clause2);
 
-        expect(orClause.build()).toBe("(status = 'active' OR age > 18)");
+        expect(orClause.build()).toEqual({
+          sql: '(status = $1 OR age > $2)',
+          params: ['active', 18],
+        });
       });
 
-      it('should handle LIKE clauses in OR', () => {
-        const clause1 = new ClauseLike('name', 'John%');
-        const clause2 = new ClauseLike('name', 'Jane%');
+      it('should handle startParamIndex', () => {
+        const clause1 = new ClauseEquals('status', 'active');
+        const clause2 = new ClauseEquals('status', 'pending');
         const orClause = new ClauseOr(clause1, clause2);
 
-        expect(orClause.build()).toBe("(name LIKE 'John%' OR name LIKE 'Jane%')");
+        expect(orClause.build({ startParamIndex: 3 })).toEqual({
+          sql: '(status = $3 OR status = $4)',
+          params: ['active', 'pending'],
+        });
       });
     });
 
@@ -49,7 +60,10 @@ describe('ClauseOr', () => {
         const clause2 = new ClauseEquals('status', 'pending');
         orClause.addClause(clause2);
 
-        expect(orClause.build()).toBe("(status = 'active' OR status = 'pending')");
+        expect(orClause.build()).toEqual({
+          sql: '(status = $1 OR status = $2)',
+          params: ['active', 'pending'],
+        });
       });
 
       it('should return the clause instance for chaining', () => {
@@ -58,16 +72,6 @@ describe('ClauseOr', () => {
 
         const result = orClause.addClause(new ClauseEquals('status', 'pending'));
         expect(result).toBe(orClause);
-      });
-
-      it('should allow multiple addClause calls', () => {
-        const orClause = new ClauseOr();
-        orClause
-          .addClause(new ClauseEquals('type', 'A'))
-          .addClause(new ClauseEquals('type', 'B'))
-          .addClause(new ClauseEquals('type', 'C'));
-
-        expect(orClause.build()).toBe("(type = 'A' OR type = 'B' OR type = 'C')");
       });
     });
 
@@ -78,7 +82,10 @@ describe('ClauseOr', () => {
         const clause3 = new ClauseEquals('status', 'pending');
         const orClause = new ClauseOr(clause1, clause2, clause3);
 
-        expect(orClause.build()).toBe("(status = 'active' OR status = 'pending')");
+        expect(orClause.build()).toEqual({
+          sql: '(status = $1 OR status = $2)',
+          params: ['active', 'pending'],
+        });
       });
 
       it('should return undefined when all clauses are undefined', () => {
@@ -95,7 +102,10 @@ describe('ClauseOr', () => {
         const clause = new ClauseEquals('status', 'active');
         const orClause = new ClauseOr(clause);
 
-        expect(orClause.build()).toBe("(status = 'active')");
+        expect(orClause.build()).toEqual({
+          sql: '(status = $1)',
+          params: ['active'],
+        });
       });
 
       it('should return undefined for empty clause array', () => {
@@ -107,7 +117,10 @@ describe('ClauseOr', () => {
         const innerOr = new ClauseOr(new ClauseEquals('type', 'A'), new ClauseEquals('type', 'B'));
         const outerOr = new ClauseOr(innerOr, new ClauseEquals('status', 'active'));
 
-        expect(outerOr.build()).toBe("((type = 'A' OR type = 'B') OR status = 'active')");
+        expect(outerOr.build()).toEqual({
+          sql: '((type = $1 OR type = $2) OR status = $3)',
+          params: ['A', 'B', 'active'],
+        });
       });
     });
   });

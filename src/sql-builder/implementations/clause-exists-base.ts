@@ -21,7 +21,7 @@ export abstract class ClauseExistsBase extends Clause {
    * @returns The formatted SQL string or undefined if the input is empty
    * @throws Error if SQL injection is detected or if the subquery is invalid
    */
-  build() {
+  private buildSql() {
     if (isEmpty(this.sql)) return undefined;
 
     const trimmedSql = this.sql.trim();
@@ -46,5 +46,15 @@ export abstract class ClauseExistsBase extends Clause {
     }
 
     return `EXISTS (${sql})`;
+  }
+
+  build(_option?: { startParamIndex?: number }) {
+    const built = this.buildSql();
+    if (!built) return undefined;
+
+    return {
+      sql: built,
+      params: [],
+    };
   }
 }

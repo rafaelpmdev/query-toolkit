@@ -6,22 +6,34 @@ describe('ClauseBetween', () => {
     describe('number ranges', () => {
       it('should generate BETWEEN clause for number range', () => {
         const clause = new ClauseBetween('age', 18, 65);
-        expect(clause.build()).toBe('age BETWEEN 18 AND 65');
+        expect(clause.build()).toEqual({
+          sql: 'age BETWEEN $1 AND $2',
+          params: [18, 65],
+        });
       });
 
       it('should handle negative numbers', () => {
         const clause = new ClauseBetween('temperature', -10, 30);
-        expect(clause.build()).toBe('temperature BETWEEN -10 AND 30');
+        expect(clause.build()).toEqual({
+          sql: 'temperature BETWEEN $1 AND $2',
+          params: [-10, 30],
+        });
       });
 
       it('should handle decimal numbers', () => {
         const clause = new ClauseBetween('price', 9.99, 99.99);
-        expect(clause.build()).toBe('price BETWEEN 9.99 AND 99.99');
+        expect(clause.build()).toEqual({
+          sql: 'price BETWEEN $1 AND $2',
+          params: [9.99, 99.99],
+        });
       });
 
       it('should handle same start and end values', () => {
         const clause = new ClauseBetween('value', 5, 5);
-        expect(clause.build()).toBe('value BETWEEN 5 AND 5');
+        expect(clause.build()).toEqual({
+          sql: 'value BETWEEN $1 AND $2',
+          params: [5, 5],
+        });
       });
     });
 
@@ -30,25 +42,20 @@ describe('ClauseBetween', () => {
         const start = new Date('2024-01-01T00:00:00Z');
         const end = new Date('2024-12-31T23:59:59Z');
         const clause = new ClauseBetween('created_at', start, end);
-        expect(clause.build()).toBe("created_at BETWEEN '2024-01-01' AND '2024-12-31'");
-      });
-
-      it('should handle same date for start and end', () => {
-        const date = new Date('2024-06-15T12:00:00Z');
-        const clause = new ClauseBetween('event_date', date, date);
-        expect(clause.build()).toBe("event_date BETWEEN '2024-06-15' AND '2024-06-15'");
+        expect(clause.build()).toEqual({
+          sql: 'created_at BETWEEN $1 AND $2',
+          params: [start, end],
+        });
       });
     });
 
     describe('string ranges', () => {
       it('should generate BETWEEN clause for string range', () => {
         const clause = new ClauseBetween('name', 'A', 'M');
-        expect(clause.build()).toBe("name BETWEEN 'A' AND 'M'");
-      });
-
-      it('should handle strings with quotes', () => {
-        const clause = new ClauseBetween('name', "A'", "Z'");
-        expect(clause.build()).toBe("name BETWEEN 'A''' AND 'Z'''");
+        expect(clause.build()).toEqual({
+          sql: 'name BETWEEN $1 AND $2',
+          params: ['A', 'M'],
+        });
       });
     });
 

@@ -19,8 +19,6 @@ export type PrimitiveValueTypes = string | boolean | number | Date;
  * new PrimitiveValue(123).toSql()       // Returns: 123
  */
 export class PrimitiveValue {
-
-
   // SQL Injection Protection Patterns
   private static readonly QUOTE_REGEX = /'/g;
   private static readonly BACKSLASH_REGEX = /\\/g;
@@ -29,7 +27,7 @@ export class PrimitiveValue {
   constructor(
     private readonly value: Nullable<PrimitiveValueTypes>,
     private readonly valueTransform?: TransformFunction
-  ) { }
+  ) {}
 
   /**
    * Converts the value to a SQL-safe string with injection protection
@@ -74,6 +72,22 @@ export class PrimitiveValue {
     return this.value;
   }
 
+  /**
+   * Returns the value for parameterized query binding.
+   * Dates are returned as Date objects, other primitives are returned as is.
+   */
+  toValue(): Nullable<PrimitiveValueTypes> {
+    if (isNullOrUndefined(this.value)) {
+      return null;
+    }
+
+    if (isAssigned(this.valueTransform)) {
+      return this.valueTransform(this.value);
+    }
+
+    return this.value;
+  }
+
   isDate(): boolean {
     return this.value instanceof Date;
   }
@@ -101,8 +115,7 @@ export class PrimitiveValue {
    * Date objects are inherently safe from SQL injection
    */
   private formatDate(date: Date): string {
-    const formattedDate = date.toISOString().split('T')[0];
-    return `'${formattedDate}'`;
+    return `'${date.toISOString()}'`;
   }
 
   /**

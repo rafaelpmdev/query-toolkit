@@ -21,12 +21,16 @@ export class ClauseBetween extends Clause {
     this.end = new PrimitiveValue(end);
   }
 
-  build() {
-    const valueStart = this.start.toSql();
-    const valueEnd = this.end.toSql();
+  build(option?: { startParamIndex?: number }) {
+    const valueStart = this.start.toValue();
+    const valueEnd = this.end.toValue();
 
     if (isNullOrUndefined(valueStart) || isNullOrUndefined(valueEnd)) return undefined;
 
-    return `${this.field} BETWEEN ${valueStart} AND ${valueEnd}`;
+    const index = option?.startParamIndex ?? 1;
+    return {
+      sql: `${this.field} BETWEEN $${index} AND $${index + 1}`,
+      params: [valueStart, valueEnd],
+    };
   }
 }

@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 import { ArrayContainsOperator } from '../query-operator/array-contains-operator';
+import { ArrayIsContainedByOperator } from '../query-operator/array-is-contained-by-operator';
 import { ArrayOverlapOperator } from '../query-operator/array-overlap-operator';
 import { BetweenOperator } from '../query-operator/between-operator';
 import { ContainsOperator } from '../query-operator/contains-operator';
@@ -29,12 +30,12 @@ describe('PrismaVisitor', () => {
   });
 
   it('should visit in', () => {
-    const op = new InOperator('in=v1,v2');
+    const op = new InOperator(['v1', 'v2']);
     expect(visitor.visitIn(op, 'field')).toEqual({ field: { in: ['v1', 'v2'] } });
   });
 
   it('should visit notIn', () => {
-    const op = new NotInOperator('out=v1,v2');
+    const op = new NotInOperator(['v1', 'v2']);
     expect(visitor.visitNotIn(op, 'field')).toEqual({ field: { notIn: ['v1', 'v2'] } });
   });
 
@@ -61,35 +62,35 @@ describe('PrismaVisitor', () => {
   it('should visit contains', () => {
     const op = new ContainsOperator('~=val');
     expect(visitor.visitContains(op, 'field')).toEqual({
-      field: { contains: 'val', mode: 'insensitive' }
+      field: { contains: 'val', mode: 'insensitive' },
     });
   });
 
   it('should visit not contains', () => {
     const op = new NotContainsOperator('!~=val');
     expect(visitor.visitNotContains(op, 'field')).toEqual({
-      field: { not: { contains: 'val', mode: 'insensitive' } }
+      field: { not: { contains: 'val', mode: 'insensitive' } },
     });
   });
 
   it('should visit between', () => {
     const op = new BetweenOperator('btw=1,10');
     expect(visitor.visitBetween(op, 'field')).toEqual({
-      field: { gte: 1, lte: 10 }
+      field: { gte: 1, lte: 10 },
     });
   });
 
   it('should visit array contains', () => {
     const op = new ArrayContainsOperator('@>v1,v2');
     expect(visitor.visitArrayContains(op, 'field')).toEqual({
-      field: { hasEvery: ['v1', 'v2'] }
+      field: { hasEvery: ['v1', 'v2'] },
     });
   });
 
   it('should visit array overlap', () => {
     const op = new ArrayOverlapOperator('&&v1,v2');
     expect(visitor.visitArrayOverlap(op, 'field')).toEqual({
-      field: { hasSome: ['v1', 'v2'] }
+      field: { hasSome: ['v1', 'v2'] },
     });
   });
 
@@ -98,16 +99,18 @@ describe('PrismaVisitor', () => {
     expect(visitor.visitUnknown(op, 'field')).toEqual({ field: 'val' });
   });
 
-  it('should visit array is contained by (returns empty object)', () => {
-    const op = {} as any; // Not used currently
-    expect(visitor.visitArrayIsContainedBy(op, 'field')).toEqual({});
+  it('should visit array is contained by and throw error', () => {
+    const op = new ArrayIsContainedByOperator('itb=[v1,v2]');
+    expect(() => visitor.visitArrayIsContainedBy(op, 'field')).toThrow(
+      'The "is contained by" array operator is not natively supported by Prisma on field "field". Use raw query execution instead.'
+    );
   });
 
   it('should handle single value in array contains', () => {
     const op = new ArrayContainsOperator('@>v1');
     vi.spyOn(op, 'value').mockReturnValue('v1' as any);
     expect(visitor.visitArrayContains(op, 'field')).toEqual({
-      field: { has: 'v1' }
+      field: { has: 'v1' },
     });
   });
 
@@ -115,14 +118,16 @@ describe('PrismaVisitor', () => {
     const op = new ArrayOverlapOperator('&&v1');
     vi.spyOn(op, 'value').mockReturnValue('v1' as any);
     expect(visitor.visitArrayOverlap(op, 'field')).toEqual({
-      field: { has: 'v1' }
+      field: { has: 'v1' },
     });
   });
 
-  it('should handle single value in between (fallback)', () => {
+  it('should handle single value in between and throw validation error', () => {
     const op = new BetweenOperator('btw=1,10');
     vi.spyOn(op, 'value').mockReturnValue(1 as any);
-    expect(visitor.visitBetween(op, 'field')).toEqual({ field: 1 });
+    expect(() => visitor.visitBetween(op, 'field')).toThrow(
+      'Invalid value for Between operator on field "field". Expected an array with 2 elements.'
+    );
   });
 
   it('should visit unknown with null value', () => {

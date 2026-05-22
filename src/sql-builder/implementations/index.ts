@@ -19,4 +19,5 @@ export * from './clause-not-exists';
 export * from './clause-not-ilike';
 export * from './clause-not-in';
 export * from './clause-or';
-
+export * from './clause-empty';
+export * from './clause-and';

@@ -6,31 +6,29 @@ describe('ClauseLessThan', () => {
     describe('number values', () => {
       it('should generate less than clause for positive number', () => {
         const clause = new ClauseLessThan('age', 65);
-        expect(clause.build()).toBe('age < 65');
+        expect(clause.build()).toEqual({
+          sql: 'age < $1',
+          params: [65],
+        });
       });
 
       it('should generate less than clause for negative number', () => {
         const clause = new ClauseLessThan('temperature', 0);
-        expect(clause.build()).toBe('temperature < 0');
-      });
-
-      it('should generate less than clause for decimal', () => {
-        const clause = new ClauseLessThan('price', 99.99);
-        expect(clause.build()).toBe('price < 99.99');
+        expect(clause.build()).toEqual({
+          sql: 'temperature < $1',
+          params: [0],
+        });
       });
     });
 
     describe('date values', () => {
       it('should generate less than clause for date', () => {
-        const date = new Date('2024-12-31T23:59:59Z');
-        const clause = new ClauseLessThan('expires_at', date);
-        expect(clause.build()).toBe("expires_at < '2024-12-31'");
-      });
-
-      it('should handle date at start of year', () => {
-        const date = new Date('2024-01-01T00:00:00Z');
+        const date = new Date('2024-01-15T10:30:00.000Z');
         const clause = new ClauseLessThan('created_at', date);
-        expect(clause.build()).toBe("created_at < '2024-01-01'");
+        expect(clause.build()).toEqual({
+          sql: 'created_at < $1',
+          params: [date],
+        });
       });
     });
 

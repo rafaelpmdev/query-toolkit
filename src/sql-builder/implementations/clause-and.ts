@@ -2,14 +2,15 @@ import { isNullOrUndefined, Nullable } from '@raicamposs/toolkit';
 import { Clause } from '../core/clause';
 import { PrimitiveValueTypes } from '../core/primitive-value';
 
-export class ClauseOr extends Clause {
+export class ClauseAnd extends Clause {
   private readonly value: Clause[] = [];
+
   constructor(...clauses: Clause[]) {
     super();
     this.value.push(...clauses);
   }
 
-  addClause(clause: Clause) {
+  addClause(clause: Clause): this {
     this.value.push(clause);
     return this;
   }
@@ -33,7 +34,7 @@ export class ClauseOr extends Clause {
     if (parts.length === 0) return undefined;
 
     return {
-      sql: `(${parts.join(' OR ')})`,
+      sql: parts.length === 1 ? parts[0] : `(${parts.join(' AND ')})`,
       params: allParams,
     };
   }

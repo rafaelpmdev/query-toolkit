@@ -20,6 +20,7 @@ import {
   ClauseArrayIsContainedBy,
   ClauseArrayOverlap,
   ClauseBetween,
+  ClauseEmpty,
   ClauseEquals,
   ClauseGreaterThan,
   ClauseGreaterThanOrEquals,
@@ -83,12 +84,18 @@ export class ClauseVisitor implements OperatorVisitor<Clause> {
   visitBetween(operator: BetweenOperator, field: string): Clause {
     const value = operator.value();
 
-    if (Array.isArray(value) && value.length === 2) {
-      return new ClauseBetween(field, value[0], value[1]);
+    if (
+      !Array.isArray(value) ||
+      value.length !== 2 ||
+      isNullOrUndefined(value[0]) ||
+      isNullOrUndefined(value[1])
+    ) {
+      throw new Error(
+        `Invalid value for Between operator on field "${field}". Expected an array with 2 elements.`
+      );
     }
 
-    // Fallback
-    return new ClauseEquals(field, Array.isArray(value) ? value[0] : (value as any));
+    return new ClauseBetween(field, value[0], value[1]);
   }
 
   visitArrayContains(operator: ArrayContainsOperator, field: string): Clause {
@@ -113,11 +120,7 @@ export class ClauseVisitor implements OperatorVisitor<Clause> {
     const value = operator.value();
 
     if (isNullOrUndefined(value)) {
-      return new (class extends Clause {
-        build() {
-          return undefined;
-        }
-      })();
+      return new ClauseEmpty();
     }
 
     return new ClauseEquals(field, value);

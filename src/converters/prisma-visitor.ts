@@ -16,7 +16,23 @@ import type { NotInOperator } from '../query-operator/not-in-operator';
 import type { UnknownOperator } from '../query-operator/unknown-operator';
 import type { OperatorVisitor } from './operator-visitor';
 
-export type PrismaWhereClause = Record<string, any>;
+export type PrismaWhereValue =
+  | unknown
+  | { not: unknown }
+  | { in: unknown[] }
+  | { notIn: unknown[] }
+  | { gt: unknown }
+  | { gte: unknown }
+  | { lt: unknown }
+  | { lte: unknown }
+  | { contains: string; mode: 'insensitive' }
+  | { not: { contains: string; mode: 'insensitive' } }
+  | { gte: unknown; lte: unknown }
+  | { hasEvery: unknown[] }
+  | { hasSome: unknown[] }
+  | { has: unknown };
+
+export type PrismaWhereClause = Record<string, PrismaWhereValue>;
 
 /**
  * Visitor implementation that converts QueryParamsOperator to Prisma where clauses
@@ -80,17 +96,23 @@ export class PrismaVisitor implements OperatorVisitor<PrismaWhereClause> {
   visitBetween(operator: BetweenOperator, field: string): PrismaWhereClause {
     const value = operator.value();
 
-    if (Array.isArray(value) && value.length === 2) {
-      return {
-        [field]: {
-          gte: value[0],
-          lte: value[1],
-        },
-      };
+    if (
+      !Array.isArray(value) ||
+      value.length !== 2 ||
+      isNullOrUndefined(value[0]) ||
+      isNullOrUndefined(value[1])
+    ) {
+      throw new Error(
+        `Invalid value for Between operator on field "${field}". Expected an array with 2 elements.`
+      );
     }
 
-    // Fallback for unexpected format
-    return { [field]: Array.isArray(value) ? value[0] : value };
+    return {
+      [field]: {
+        gte: value[0],
+        lte: value[1],
+      },
+    };
   }
 
   visitArrayContains(operator: ArrayContainsOperator, field: string): PrismaWhereClause {
@@ -103,14 +125,10 @@ export class PrismaVisitor implements OperatorVisitor<PrismaWhereClause> {
     return { [field]: { has: value } };
   }
 
-  visitArrayIsContainedBy(
-    _operator: ArrayIsContainedByOperator,
-    _field: string
-  ): PrismaWhereClause {
-    // Prisma doesn't have native support for "is contained by" operator
-    // This would require raw SQL query
-    // For now, we return an empty object
-    return {};
+  visitArrayIsContainedBy(_operator: ArrayIsContainedByOperator, field: string): PrismaWhereClause {
+    throw new Error(
+      `The "is contained by" array operator is not natively supported by Prisma on field "${field}". Use raw query execution instead.`
+    );
   }
 
   visitArrayOverlap(operator: ArrayOverlapOperator, field: string): PrismaWhereClause {

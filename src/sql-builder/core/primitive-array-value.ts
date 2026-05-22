@@ -21,4 +21,11 @@ export class PrimitiveArrayValue {
 
     return `${this.value.map((value) => value.toSql()).join(', ')}`;
   }
+
+  toValue(): Nullable<PrimitiveValueTypes>[] {
+    if (this.isEmpty) {
+      return [];
+    }
+    return this.value.map((value) => value.toValue());
+  }
 }

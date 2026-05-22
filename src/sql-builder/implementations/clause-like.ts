@@ -6,10 +6,15 @@ export class ClauseLike extends ClauseBase {
     super(field, value);
   }
 
-  build() {
-    const value = this.value.toSql();
+  build(option?: { startParamIndex?: number }) {
+    const value = this.value.toValue();
     if (isNullOrUndefined(value)) return undefined;
     if (!this.value.isString()) return undefined;
-    return `${this.field} LIKE ${value}`;
+
+    const index = option?.startParamIndex ?? 1;
+    return {
+      sql: `${this.field} LIKE $${index}`,
+      params: [value],
+    };
   }
 }

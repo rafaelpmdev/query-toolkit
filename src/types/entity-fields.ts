@@ -4,16 +4,16 @@
  */
 export type QueryableFields<T> = {
   [K in keyof T]: T[K] extends
-  | string
-  | number
-  | boolean
-  | Date
-  | string[]
-  | number[]
-  | null
-  | undefined
-  ? K
-  : never;
+    | string
+    | number
+    | boolean
+    | Date
+    | string[]
+    | number[]
+    | null
+    | undefined
+    ? K
+    : never;
 }[keyof T];
 
 /**
