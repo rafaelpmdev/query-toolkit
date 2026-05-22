@@ -7,7 +7,7 @@ export default tseslint.config(
   {
     files: ['**/*.ts', '**/*.tsx'],
     rules: {
-      '@typescript-eslint/no-explicit-any': 'off',
+      '@typescript-eslint/no-explicit-any': 'error',
       '@typescript-eslint/no-unused-vars': [
         'warn',
         {
@@ -37,6 +37,6 @@ export default tseslint.config(
     },
   },
   {
-    ignores: ['node_modules/**', 'dist/**', 'coverage/**', '*.config.js', '*.config.mjs'],
+    ignores: ['node_modules/**', 'dist/**', 'coverage/**', '*.config.js', '*.config.mjs', '.agent/**'],
   }
 );

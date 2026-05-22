@@ -31,3 +31,7 @@ lerna-debug.log*
 .env
 .env.*
 !.env.example
+
+.vscode
+.agent
+.cursor
