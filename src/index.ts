@@ -5,4 +5,3 @@ export * from './query-operator';
 export * from './rsql-parse';
 export * from './sql-builder';
 export * from './types';
-

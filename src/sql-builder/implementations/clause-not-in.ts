@@ -1,4 +1,4 @@
-import { isEmpty, isNullOrUndefined } from '@raicamposs/toolkit';
+import { isEmpty } from '@raicamposs/toolkit';
 import { Clause } from '../core/clause';
 import { PrimitiveArrayValue } from '../core/primitive-array-value';
 import { PrimitiveValueTypes } from '../core/primitive-value';
@@ -16,9 +16,16 @@ export class ClauseNotIn extends Clause {
     this.compareFields = new PrimitiveArrayValue(compareFields);
   }
 
-  build() {
-    const value = this.compareFields.toSql();
-    if (isNullOrUndefined(value)) return undefined;
-    return `NOT ${this.field} IN (${value})`;
+  build(option?: { startParamIndex?: number }) {
+    const values = this.compareFields.toValue();
+    if (isEmpty(values)) return undefined;
+
+    let index = option?.startParamIndex ?? 1;
+    const placeholders = values.map(() => `$${index++}`).join(', ');
+
+    return {
+      sql: `NOT ${this.field} IN (${placeholders})`,
+      params: values,
+    };
   }
 }

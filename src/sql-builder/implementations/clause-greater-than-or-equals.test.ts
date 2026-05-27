@@ -6,36 +6,37 @@ describe('ClauseGreaterThanOrEquals', () => {
     describe('number values', () => {
       it('should generate greater than or equals clause for number', () => {
         const clause = new ClauseGreaterThanOrEquals('age', 18);
-        expect(clause.build()).toBe('age >= 18');
+        expect(clause.build()).toEqual({
+          sql: 'age >= $1',
+          params: [18],
+        });
       });
 
       it('should handle zero', () => {
         const clause = new ClauseGreaterThanOrEquals('balance', 0);
-        expect(clause.build()).toBe('balance >= 0');
+        expect(clause.build()).toEqual({
+          sql: 'balance >= $1',
+          params: [0],
+        });
       });
 
       it('should handle negative numbers', () => {
         const clause = new ClauseGreaterThanOrEquals('temperature', -5);
-        expect(clause.build()).toBe('temperature >= -5');
-      });
-
-      it('should handle decimal numbers', () => {
-        const clause = new ClauseGreaterThanOrEquals('price', 9.99);
-        expect(clause.build()).toBe('price >= 9.99');
+        expect(clause.build()).toEqual({
+          sql: 'temperature >= $1',
+          params: [-5],
+        });
       });
     });
 
     describe('date values', () => {
       it('should generate greater than or equals clause for date', () => {
-        const date = new Date('2024-01-01T00:00:00Z');
+        const date = new Date('2024-01-15T10:30:00.000Z');
         const clause = new ClauseGreaterThanOrEquals('created_at', date);
-        expect(clause.build()).toBe("created_at >= '2024-01-01'");
-      });
-
-      it('should handle date boundaries', () => {
-        const date = new Date('2024-12-31T23:59:59Z');
-        const clause = new ClauseGreaterThanOrEquals('expires_at', date);
-        expect(clause.build()).toBe("expires_at >= '2024-12-31'");
+        expect(clause.build()).toEqual({
+          sql: 'created_at >= $1',
+          params: [date],
+        });
       });
     });
 

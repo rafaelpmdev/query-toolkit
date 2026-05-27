@@ -85,7 +85,7 @@ describe('SqlInjectionDetector', () => {
       });
 
       it('should detect OR \"a\"=\"a\"', () => {
-        expect(SqlInjectionDetector.detect("' OR \"a\"=\"a\"")).toBe(true);
+        expect(SqlInjectionDetector.detect('\' OR "a"="a"')).toBe(true);
       });
 
       it('should detect OR TRUE', () => {
@@ -108,7 +108,7 @@ describe('SqlInjectionDetector', () => {
 
     describe('Time-based injection', () => {
       it('should detect WAITFOR DELAY', () => {
-        expect(SqlInjectionDetector.detect('test; WAITFOR DELAY \'0:0:5\'')).toBe(true);
+        expect(SqlInjectionDetector.detect("test; WAITFOR DELAY '0:0:5'")).toBe(true);
       });
 
       it('should detect SLEEP', () => {
@@ -148,7 +148,7 @@ describe('SqlInjectionDetector', () => {
   describe('detectAndWarn', () => {
     it('should log warning when dangerous pattern is detected and strictMode is false', () => {
       SqlInjectionDetector.configure({ strictMode: false });
-      const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => { });
+      const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
 
       SqlInjectionDetector.detectAndWarn('test -- comment');
 
@@ -172,7 +172,7 @@ describe('SqlInjectionDetector', () => {
     });
 
     it('should not log warning or throw for safe values', () => {
-      const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => { });
+      const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
 
       SqlInjectionDetector.detectAndWarn('safe value');
 
@@ -182,7 +182,7 @@ describe('SqlInjectionDetector', () => {
     });
 
     it('should truncate long values in warning message', () => {
-      const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => { });
+      const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
       const longValue = 'a'.repeat(100) + ' -- comment';
 
       SqlInjectionDetector.detectAndWarn(longValue);
@@ -190,6 +190,22 @@ describe('SqlInjectionDetector', () => {
       expect(consoleWarnSpy).toHaveBeenCalledWith(expect.stringContaining('...'));
 
       consoleWarnSpy.mockRestore();
+    });
+
+    it('should delegate warning to custom logger when provided', () => {
+      const customLogger = {
+        warn: vi.fn(),
+      };
+      SqlInjectionDetector.configure({ strictMode: false, logger: customLogger });
+
+      SqlInjectionDetector.detectAndWarn('test -- comment');
+
+      expect(customLogger.warn).toHaveBeenCalledWith(
+        expect.stringContaining('[SQL Security Warning]')
+      );
+
+      // Cleanup custom logger configuration
+      SqlInjectionDetector.configure({ logger: undefined });
     });
   });
 
@@ -203,7 +219,7 @@ describe('SqlInjectionDetector', () => {
 
       SqlInjectionDetector.configure({ strictMode: false });
 
-      const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => { });
+      const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
       SqlInjectionDetector.detectAndWarn('test -- comment');
       expect(consoleWarnSpy).toHaveBeenCalled();
       consoleWarnSpy.mockRestore();

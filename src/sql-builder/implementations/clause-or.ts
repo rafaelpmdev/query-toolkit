@@ -1,5 +1,6 @@
-import { isEmpty, isNullOrUndefined } from '@raicamposs/toolkit';
+import { isNullOrUndefined, Nullable } from '@raicamposs/toolkit';
 import { Clause } from '../core/clause';
+import { PrimitiveValueTypes } from '../core/primitive-value';
 
 export class ClauseOr extends Clause {
   private readonly value: Clause[] = [];
@@ -13,18 +14,27 @@ export class ClauseOr extends Clause {
     return this;
   }
 
-  build() {
+  build(option?: { startParamIndex?: number }) {
     if (isNullOrUndefined(this.value) || this.value.length === 0) return undefined;
 
-    const where = this.value
-      .map((clause) => clause.build())
-      .filter((clause) => isEmpty(clause) === false)
-      .join(' OR ');
+    let currentIndex = option?.startParamIndex ?? 1;
+    const parts: string[] = [];
+    const allParams: Nullable<PrimitiveValueTypes>[] = [];
 
-    if (isEmpty(where)) {
-      return undefined;
+    for (const clause of this.value) {
+      const built = clause.build({ startParamIndex: currentIndex });
+      if (built) {
+        parts.push(built.sql);
+        allParams.push(...built.params);
+        currentIndex += built.params.length;
+      }
     }
 
-    return '(' + where + ')';
+    if (parts.length === 0) return undefined;
+
+    return {
+      sql: `(${parts.join(' OR ')})`,
+      params: allParams,
+    };
   }
 }

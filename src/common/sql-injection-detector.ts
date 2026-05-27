@@ -3,12 +3,20 @@
  * when dangerous patterns are detected.
  */
 
+export interface Logger {
+  warn(message: string): void;
+}
+
 export interface DetectorConfig {
   /**
    * If true, detectAndWarn will throw an error instead of logging a warning.
    * Default: false
    */
   strictMode: boolean;
+  /**
+   * Optional custom logger implementation to delegate warnings.
+   */
+  logger?: Logger;
 }
 
 export class SqlInjectionDetector {
@@ -70,8 +78,12 @@ export class SqlInjectionDetector {
         throw new Error(message);
       }
 
-      // eslint-disable-next-line no-console
-      console.warn(message);
+      if (SqlInjectionDetector.config.logger) {
+        SqlInjectionDetector.config.logger.warn(message);
+      } else {
+        // eslint-disable-next-line no-console
+        console.warn(message);
+      }
     }
   }
 }

@@ -24,6 +24,9 @@ export const SQL_BUILDER_CONSTANTS = {
 
   /** Maximum number of GROUP BY clauses allowed */
   MAX_GROUP_BY_CLAUSES: 10,
+
+  /** Maximum number of JOINs allowed */
+  MAX_JOINS: 8,
 } as const;
 
 export const PRIMITIVE_VALUE_CONSTANTS = {

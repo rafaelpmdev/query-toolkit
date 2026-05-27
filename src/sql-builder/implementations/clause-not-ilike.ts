@@ -7,9 +7,13 @@ export class ClauseNotILike extends ClauseBase {
     super(field, value);
   }
 
-  build() {
-    const value = this.value.toSql();
-    if (isNullOrUndefined(value)) return undefined;
-    return `${this.field} NOT ILIKE ${value}`;
+  build(option?: { startParamIndex?: number }) {
+    const raw = this.value.toValue();
+    if (isNullOrUndefined(raw)) return undefined;
+    const index = option?.startParamIndex ?? 1;
+    return {
+      sql: `${this.field} NOT ILIKE $${index}`,
+      params: [raw],
+    };
   }
 }

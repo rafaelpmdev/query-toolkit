@@ -19,12 +19,17 @@ export class ClauseContains extends Clause {
       .map((item) => new PrimitiveValue(item));
   }
 
-  build() {
+  build(option?: { startParamIndex?: number }) {
     if (isNullOrUndefined(this.compareFields)) return undefined;
     if (this.compareFields.length === 0) return undefined;
 
-    return `array[${this.field}]::text[] ${this.containment} array[${[
-      ...this.compareFields.map((item) => item.toSql()),
-    ]}]`;
+    let index = option?.startParamIndex ?? 1;
+    const placeholders = this.compareFields.map(() => `$${index++}`).join(', ');
+    const params = this.compareFields.map((item) => item.toValue());
+
+    return {
+      sql: `array[${this.field}]::text[] ${this.containment} array[${placeholders}]`,
+      params,
+    };
   }
 }

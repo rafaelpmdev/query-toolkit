@@ -14,7 +14,10 @@ describe('ClauseExistsBase', () => {
       const clause = new TestClauseExists('SELECT 1 FROM test_table');
       const result = clause.build();
 
-      expect(result).toBe('TEST_ EXISTS (SELECT 1 FROM test_table)');
+      expect(result).toEqual({
+        sql: 'TEST_ EXISTS (SELECT 1 FROM test_table)',
+        params: [],
+      });
     });
 
     it('should validate SELECT requirement', () => {
@@ -28,7 +31,10 @@ describe('ClauseExistsBase', () => {
       const clause = new TestClauseExists(sql);
       const result = clause.build();
 
-      expect(result).toBe(`TEST_ EXISTS (${sql.trim()})`);
+      expect(result).toEqual({
+        sql: `TEST_ EXISTS (${sql.trim()})`,
+        params: [],
+      });
     });
 
     it('should return undefined for empty SQL', () => {
@@ -102,7 +108,7 @@ describe('ClauseExistsBase', () => {
       const clause = new TestClauseExists(sql);
       const result = clause.build();
 
-      expect(result).toContain(sql);
+      expect(result?.sql).toContain(sql);
     });
 
     it('should handle SQL with line breaks', () => {
@@ -112,7 +118,10 @@ describe('ClauseExistsBase', () => {
       const clause = new TestClauseExists(sql);
       const result = clause.build();
 
-      expect(result).toBe(`TEST_ EXISTS (${sql})`);
+      expect(result).toEqual({
+        sql: `TEST_ EXISTS (${sql})`,
+        params: [],
+      });
     });
   });
 
@@ -127,7 +136,10 @@ describe('ClauseExistsBase', () => {
       const clause = new CustomClause('SELECT 1');
       const result = clause.build();
 
-      expect(result).toBe('CUSTOM_PREFIX_ EXISTS (SELECT 1)');
+      expect(result).toEqual({
+        sql: 'CUSTOM_PREFIX_ EXISTS (SELECT 1)',
+        params: [],
+      });
     });
 
     it('should allow empty prefix', () => {
@@ -140,7 +152,10 @@ describe('ClauseExistsBase', () => {
       const clause = new NoPrefixClause('SELECT 1');
       const result = clause.build();
 
-      expect(result).toBe('EXISTS (SELECT 1)');
+      expect(result).toEqual({
+        sql: 'EXISTS (SELECT 1)',
+        params: [],
+      });
     });
   });
 });

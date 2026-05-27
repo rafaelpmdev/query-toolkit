@@ -11,31 +11,15 @@
 // Less than or equal to (lte=) : lte
 // Between (btw=) : btw
 
-import { Nullable, ValueOf } from '@raicamposs/toolkit';
-import type { OperatorVisitor } from '../converters/operator-visitor';
+import { Nullable } from '@raicamposs/toolkit';
+import type { OperatorVisitor } from '../converters';
 import { PrimitiveValueTypes } from '../sql-builder/core';
 import { RsqlCondition } from '../types';
-
-export const OperatorSymbol = {
-  equals: '==',
-  notEquals: '!=',
-  ilike: '~=',
-  ilikeNumberString: '+=',
-  notLike: '!~=',
-  in: 'in=',
-  notIn: 'out=',
-  greaterThan: 'gt=',
-  greaterThanOrEqual: 'gte=',
-  lessThan: 'lt=',
-  lessThanOrEqual: 'lte=',
-  between: 'btw=',
-} as const;
-
-export type OperatorSymbolType = ValueOf<typeof OperatorSymbol>;
+import { OperatorSymbolType } from '../types/operator-symbol';
 
 export abstract class QueryParamsOperator {
   constructor(
-    public readonly symbol: string,
+    public readonly symbol: OperatorSymbolType | '',
     public readonly params: string
   ) {}
 

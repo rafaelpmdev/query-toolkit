@@ -8,4 +8,3 @@ export * from './rsql-condition';
 export * from './serial-params';
 export * from './string-params';
 export * from './uuid-params';
-

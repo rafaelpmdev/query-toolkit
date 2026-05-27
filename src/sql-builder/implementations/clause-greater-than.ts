@@ -7,12 +7,16 @@ export class ClauseGreaterThan extends ClauseBase {
     super(field, value);
   }
 
-  build() {
+  build(option?: { startParamIndex?: number }) {
     if (!(this.value.isNumber() || this.value.isDate())) return undefined;
 
-    const value = this.value.toSql();
+    const value = this.value.toValue();
     if (isNullOrUndefined(value)) return undefined;
 
-    return `${this.field} > ${value}`;
+    const index = option?.startParamIndex ?? 1;
+    return {
+      sql: `${this.field} > $${index}`,
+      params: [value],
+    };
   }
 }

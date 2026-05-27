@@ -1,5 +1,6 @@
 import { isEmpty } from '@raicamposs/toolkit';
-import { Clause } from './clause';
+import { Clause, ParameterizedQuery } from './clause';
+
 import { PrimitiveValue, PrimitiveValueTypes } from './primitive-value';
 
 export abstract class ClauseBase extends Clause {
@@ -16,5 +17,5 @@ export abstract class ClauseBase extends Clause {
     this.value = new PrimitiveValue(value);
   }
 
-  abstract build(): string | undefined;
+  abstract build(option?: { startParamIndex?: number }): ParameterizedQuery | undefined;
 }

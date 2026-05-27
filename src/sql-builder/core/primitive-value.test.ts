@@ -95,22 +95,22 @@ describe('PrimitiveValue', () => {
     });
 
     describe('date values', () => {
-      it('should format date in DD/MM/YYYY format', () => {
-        const date = new Date('2024-01-15T10:30:00Z');
+      it('should format date in ISO format', () => {
+        const date = new Date('2024-01-15T10:30:00.000Z');
         const value = new PrimitiveValue(date);
-        expect(value.toSql()).toBe("'2024-01-15'");
+        expect(value.toSql()).toBe(`'${date.toISOString()}'`);
       });
 
       it('should format date at year boundary', () => {
-        const date = new Date('2024-12-31T23:59:59Z');
+        const date = new Date('2024-12-31T23:59:59.000Z');
         const value = new PrimitiveValue(date);
-        expect(value.toSql()).toBe("'2024-12-31'");
+        expect(value.toSql()).toBe(`'${date.toISOString()}'`);
       });
 
       it('should format date at start of year', () => {
-        const date = new Date('2024-01-01T00:00:00Z');
+        const date = new Date('2024-01-01T00:00:00.000Z');
         const value = new PrimitiveValue(date);
-        expect(value.toSql()).toBe("'2024-01-01'");
+        expect(value.toSql()).toBe(`'${date.toISOString()}'`);
       });
     });
 

@@ -8,7 +8,10 @@ describe('ClauseExists', () => {
       const clause = new ClauseExists(sql);
       const result = clause.build();
 
-      expect(result).toBe(`EXISTS (${sql})`);
+      expect(result).toEqual({
+        sql: `EXISTS (${sql})`,
+        params: [],
+      });
     });
 
     it('should handle complex subqueries', () => {
@@ -16,7 +19,10 @@ describe('ClauseExists', () => {
       const clause = new ClauseExists(sql);
       const result = clause.build();
 
-      expect(result).toBe(`EXISTS (${sql})`);
+      expect(result).toEqual({
+        sql: `EXISTS (${sql})`,
+        params: [],
+      });
     });
 
     it('should trim whitespace from SQL', () => {
@@ -24,7 +30,10 @@ describe('ClauseExists', () => {
       const clause = new ClauseExists(sql);
       const result = clause.build();
 
-      expect(result).toBe(`EXISTS (${sql.trim()})`);
+      expect(result).toEqual({
+        sql: `EXISTS (${sql.trim()})`,
+        params: [],
+      });
     });
 
     it('should return undefined for empty string', () => {
@@ -57,7 +66,10 @@ describe('ClauseExists', () => {
       const clause = new ClauseExists('select 1 from users');
       const result = clause.build();
 
-      expect(result).toBe('EXISTS (select 1 from users)');
+      expect(result).toEqual({
+        sql: 'EXISTS (select 1 from users)',
+        params: [],
+      });
     });
 
     it('should detect SQL injection with comments', () => {
@@ -88,7 +100,10 @@ describe('ClauseExists', () => {
       const clause = new ClauseExists("SELECT * FROM users WHERE role = 'admin'");
       const result = clause.build();
 
-      expect(result).toBe("EXISTS (SELECT * FROM users WHERE role = 'admin')");
+      expect(result).toEqual({
+        sql: "EXISTS (SELECT * FROM users WHERE role = 'admin')",
+        params: [],
+      });
     });
 
     it('should handle SELECT with JOIN', () => {
@@ -96,7 +111,10 @@ describe('ClauseExists', () => {
       const clause = new ClauseExists(sql);
       const result = clause.build();
 
-      expect(result).toBe(`EXISTS (${sql})`);
+      expect(result).toEqual({
+        sql: `EXISTS (${sql})`,
+        params: [],
+      });
     });
 
     it('should handle SELECT with subquery', () => {
@@ -104,7 +122,10 @@ describe('ClauseExists', () => {
       const clause = new ClauseExists(sql);
       const result = clause.build();
 
-      expect(result).toBe(`EXISTS (${sql})`);
+      expect(result).toEqual({
+        sql: `EXISTS (${sql})`,
+        params: [],
+      });
     });
   });
 });

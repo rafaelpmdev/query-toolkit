@@ -1,0 +1,50 @@
+{
+  "name": "query-toolkit-example",
+  "version": "1.0.0",
+  "description": "Projeto de exemplo oficial da biblioteca @raicamposs/query-toolkit — showcase completo com Fastify + Prisma + PostgreSQL em Docker",
+  "main": "dist/server.js",
+  "scripts": {
+    "dev": "tsx watch src/server.ts",
+    "build": "tsc",
+    "db:generate": "prisma generate",
+    "db:migrate": "prisma migrate dev --name init",
+    "db:seed": "tsx prisma/seed.ts",
+    "db:studio": "prisma studio",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "keywords": [
+    "query-toolkit",
+    "rsql",
+    "fastify",
+    "prisma",
+    "postgresql",
+    "docker",
+    "example"
+  ],
+  "author": "Raicamposs",
+  "license": "MIT",
+  "dependencies": {
+    "@fastify/swagger": "^9.7.0",
+    "@fastify/swagger-ui": "^5.2.6",
+    "@prisma/adapter-pg": "^7.0.0",
+    "@prisma/client": "^7.0.0",
+    "@raicamposs/query-toolkit": "file:..",
+    "@raicamposs/toolkit": "^1.0.8",
+    "pg": "^8.11.5",
+    "qs": "^6.15.2",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@fastify/cors": "^11.2.0",
+    "@types/node": "^22.19.19",
+    "@types/pg": "^8.11.4",
+    "@types/qs": "^6.15.1",
+    "fastify": "^5.8.5",
+    "pino-pretty": "^13.1.3",
+    "prisma": "^7.0.0",
+    "tsx": "^4.22.3",
+    "typescript": "^5.9.3",
+    "vitest": "^3.2.4"
+  }
+}

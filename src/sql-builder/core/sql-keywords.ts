@@ -30,6 +30,11 @@ export const SQL_KEYWORDS = {
   EXISTS: 'EXISTS',
   ASC: 'ASC',
   DESC: 'DESC',
+  JOIN: 'JOIN',
+  LEFT_JOIN: 'LEFT JOIN',
+  RIGHT_JOIN: 'RIGHT JOIN',
+  FULL_JOIN: 'FULL OUTER JOIN',
+  ON: 'ON',
 } as const;
 
 export const SQL_ARRAY_OPERATORS = {

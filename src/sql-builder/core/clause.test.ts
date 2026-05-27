@@ -4,7 +4,7 @@ import { Clause } from './clause';
 // Need a concrete implementation to test the base class
 class ConcreteClause extends Clause {
   build() {
-    return 'build';
+    return { sql: 'build', params: [] };
   }
 }
 

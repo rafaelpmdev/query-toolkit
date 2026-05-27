@@ -1,188 +1,205 @@
-import { coalesce, isAssigned, isNullOrUndefined, JSONConverter, ObjectEntries } from "@raicamposs/toolkit"
-import { Convert } from "./convert"
-import { Mapper } from "./mapper"
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { coalesce, isAssigned, isNullOrUndefined, JSONConverter } from '@raicamposs/toolkit';
+import { Mapper } from './mapper';
 
-
+export type PropertyConverter<Table, Entity, K extends keyof Entity> = (
+  value: unknown,
+  property: keyof Table
+) => Entity[K];
 
 export class MapperBuilder<Table extends Record<string, any>, Entity extends Record<string, any>> {
-  private readonly convert: Convert<Table, Entity> = new Map()
+  private readonly convert: Map<keyof Entity, PropertyConverter<Table, Entity, any>> = new Map();
+  private readonly cachedMapperEntries: [keyof Table, keyof Entity][];
 
-  constructor(private readonly mapper: Mapper<Table, Entity>) { }
+  constructor(private readonly mapper: Mapper<Table, Entity>) {
+    this.cachedMapperEntries = Object.entries(mapper) as [keyof Table, keyof Entity][];
+  }
 
-  public addConverter(
-    entityProperty: keyof Entity,
-    convert: (value: unknown, property: keyof Table) => unknown,
+  public addConverter<K extends keyof Entity>(
+    entityProperty: K,
+    convert: (value: unknown, property: keyof Table) => Entity[K]
   ) {
-    this.convert.set(entityProperty, convert)
-    return this
+    this.convert.set(entityProperty, convert);
+    return this;
   }
 
-  public convertEmptyToNull(entityProperty: keyof Entity) {
-    return this.addConverter(entityProperty, (value: unknown) =>
-      value === '' ? null : value,
-    )
+  public convertEmptyToNull<K extends keyof Entity>(entityProperty: K) {
+    return this.addConverter(
+      entityProperty,
+      (value: unknown) => (value === '' ? null : value) as Entity[K]
+    );
   }
 
-
-  public convertEmptyToUndefined(entityProperty: keyof Entity) {
-    return this.addConverter(entityProperty, (value: unknown) =>
-      value === '' ? undefined : value,
-    )
+  public convertEmptyToUndefined<K extends keyof Entity>(entityProperty: K) {
+    return this.addConverter(
+      entityProperty,
+      (value: unknown) => (value === '' ? undefined : value) as Entity[K]
+    );
   }
 
-  public convertZeroToNull(entityProperty: keyof Entity) {
-    return this.addConverter(entityProperty, (value: unknown) =>
-      value === 0 ? null : value,
-    )
+  public convertZeroToNull<K extends keyof Entity>(entityProperty: K) {
+    return this.addConverter(
+      entityProperty,
+      (value: unknown) => (value === 0 ? null : value) as Entity[K]
+    );
   }
 
-  public convertOnlyNumbers(entityProperty: keyof Entity) {
-    return this.addConverter(entityProperty, (value: unknown) =>
-      isAssigned(value) ? value.toString().replace(/[^0-9]/gi, '') : value,
-    )
+  public convertOnlyNumbers<K extends keyof Entity>(entityProperty: K) {
+    return this.addConverter(
+      entityProperty,
+      (value: unknown) =>
+        (isAssigned(value) ? value.toString().replace(/[^0-9]/gi, '') : value) as Entity[K]
+    );
   }
 
-  public convertDateToIso(entityProperty: keyof Entity) {
+  public convertDateToIso<K extends keyof Entity>(entityProperty: K) {
     return this.addConverter(entityProperty, (value: unknown) => {
       if (isNullOrUndefined(value)) {
-        return value
+        return value as Entity[K];
       }
 
-      return new Date(value as any).toISOString()
-    })
+      return new Date(value as any).toISOString() as Entity[K];
+    });
   }
 
-  public convertTime<EntityProperty extends keyof Entity>(
-    entityProperty: EntityProperty,
-  ) {
+  public convertTime<K extends keyof Entity>(entityProperty: K) {
     return this.addConverter(entityProperty, (value: unknown) => {
       if (value === null || value === undefined) {
-        return value
+        return value as Entity[K];
       }
-      const date = new Date(value as any)
+      const date = new Date(value as any);
       return [date.getUTCHours(), date.getUTCMinutes(), date.getUTCSeconds()]
         .map((item: number) => item.toString().padStart(2, '0'))
-        .join(':')
-    })
+        .join(':') as Entity[K];
+    });
   }
 
-  public convertToUpper(entityProperty: keyof Entity) {
-    return this.addConverter(entityProperty, (value: unknown) =>
-      value?.toString().toUpperCase(),
-    )
+  public convertToUpper<K extends keyof Entity>(entityProperty: K) {
+    return this.addConverter(
+      entityProperty,
+      (value: unknown) => value?.toString().toUpperCase() as Entity[K]
+    );
   }
 
-  public convertToLower(entityProperty: keyof Entity) {
-    return this.addConverter(entityProperty, (value: unknown) =>
-      value?.toString().toLowerCase(),
-    )
+  public convertToLower<K extends keyof Entity>(entityProperty: K) {
+    return this.addConverter(
+      entityProperty,
+      (value: unknown) => value?.toString().toLowerCase() as Entity[K]
+    );
   }
 
-  public convertZeroToUndefined(entityProperty: keyof Entity) {
-    return this.addConverter(entityProperty, (value: unknown) =>
-      value === 0 ? undefined : value,
-    )
+  public convertZeroToUndefined<K extends keyof Entity>(entityProperty: K) {
+    return this.addConverter(
+      entityProperty,
+      (value: unknown) => (value === 0 ? undefined : value) as Entity[K]
+    );
   }
 
-  public convertJsonStringToObject(entityProperty: keyof Entity) {
-    return this.addConverter(entityProperty, (value: unknown) =>
-      JSONConverter.parse(value as any),
-    )
+  public convertJsonStringToObject<K extends keyof Entity>(entityProperty: K) {
+    return this.addConverter(
+      entityProperty,
+      (value: unknown) => JSONConverter.parse(value as any) as Entity[K]
+    );
   }
 
-  public convertObjectToJsonString(entityProperty: keyof Entity) {
-    return this.addConverter(entityProperty, (value: unknown) =>
-      JSONConverter.stringify(value),
-    )
+  public convertObjectToJsonString<K extends keyof Entity>(entityProperty: K) {
+    return this.addConverter(
+      entityProperty,
+      (value: unknown) => JSONConverter.stringify(value) as Entity[K]
+    );
   }
 
-  public convertStrToNumber(entityProperty: keyof Entity) {
-    return this.addConverter(entityProperty, (value: unknown) =>
-      Number(value?.toString().replace(',', '.')),
-    )
+  public convertStrToNumber<K extends keyof Entity>(entityProperty: K) {
+    return this.addConverter(
+      entityProperty,
+      (value: unknown) => Number(value?.toString().replace(',', '.')) as Entity[K]
+    );
   }
 
-  public convertStrToFloat(entityProperty: keyof Entity) {
-    return this.addConverter(entityProperty, (value: unknown) =>
-      parseFloat(value?.toString()?.replace(',', '.') ?? ''),
-    )
+  public convertStrToFloat<K extends keyof Entity>(entityProperty: K) {
+    return this.addConverter(
+      entityProperty,
+      (value: unknown) => parseFloat(value?.toString()?.replace(',', '.') ?? '') as Entity[K]
+    );
   }
 
-  public convertStrToBoolean(entityProperty: keyof Entity) {
+  public convertStrToBoolean<K extends keyof Entity>(entityProperty: K) {
     return this.addConverter(entityProperty, (value: unknown) => {
       if (isNullOrUndefined(value)) {
-        return value
+        return value as Entity[K];
       }
-      return value === 'true' || value === true || value === '1' || value === 1
-    })
+      return (value === 'true' || value === true || value === '1' || value === 1) as Entity[K];
+    });
   }
 
-  public convertStrToDate(entityProperty: keyof Entity) {
-    return this.addConverter(entityProperty, (value: unknown) =>
-      isNullOrUndefined(value) ? value : new Date(value as any),
-    )
+  public convertStrToDate<K extends keyof Entity>(entityProperty: K) {
+    return this.addConverter(
+      entityProperty,
+      (value: unknown) => (isNullOrUndefined(value) ? value : new Date(value as any)) as Entity[K]
+    );
   }
 
-  public convertDefaultAs(entityProperty: keyof Entity, defaultValue: unknown) {
-    return this.addConverter(entityProperty, (value: unknown) =>
-      coalesce(value, defaultValue),
-    )
+  public convertDefaultAs<K extends keyof Entity>(entityProperty: K, defaultValue: Entity[K]) {
+    return this.addConverter(
+      entityProperty,
+      (value: unknown) => coalesce(value, defaultValue) as Entity[K]
+    );
   }
+
   public entityToModel(entity: Partial<Entity>): Table {
     if (isNullOrUndefined(entity)) {
-      return entity as unknown as Table
+      return entity as unknown as Table;
     }
 
-    const initialValue = {} as Table
+    const model = {} as Table;
 
-    return ObjectEntries(this.mapper).reduce((model, [modelProp, entityProp]) => {
-      const modelProperty = modelProp as keyof Table
-      const entityProperty = entityProp as keyof Entity
-
-      const originalValue = entity[entityProperty]
-      const converter = this.convert.get(entityProperty)
+    for (let i = 0; i < this.cachedMapperEntries.length; i++) {
+      const [modelProp, entityProp] = this.cachedMapperEntries[i];
+      const originalValue = entity[entityProp];
+      const converter = this.convert.get(entityProp);
 
       if (!converter) {
-        model[modelProperty] = originalValue as Table[keyof Table]
-        return model
+        model[modelProp] = originalValue as Table[keyof Table];
+        continue;
       }
 
-      model[modelProperty] = (
+      model[modelProp] = (
         Array.isArray(originalValue)
-          ? originalValue.map((item: unknown) => converter(item, modelProperty))
-          : converter(originalValue, modelProperty)
-      ) as Table[keyof Table]
+          ? originalValue.map((item: unknown) => converter(item, modelProp))
+          : converter(originalValue, modelProp)
+      ) as Table[keyof Table];
+    }
 
-      return model
-    }, initialValue)
+    return model;
   }
 
   public toColumnMapper(): Record<keyof Entity, keyof Table> {
-    const initialValue = {} as Record<keyof Entity, keyof Table>
+    const acc = {} as Record<keyof Entity, keyof Table>;
 
-    return ObjectEntries(this.mapper).reduce((acc, [modelProp, entityProp]) => {
-      acc[entityProp as keyof Entity] = modelProp as keyof Table
-      return acc
-    }, initialValue)
+    for (let i = 0; i < this.cachedMapperEntries.length; i++) {
+      const [modelProp, entityProp] = this.cachedMapperEntries[i];
+      acc[entityProp] = modelProp;
+    }
+
+    return acc;
   }
 
   public modelToEntity(model: Partial<Table>): Entity {
     if (isNullOrUndefined(model)) {
-      return model as unknown as Entity
+      return model as unknown as Entity;
     }
 
-    const initialValue = {} as Entity
+    const entity = {} as Entity;
 
-    return ObjectEntries(this.mapper).reduce((entity, [modelProp, entityProp]) => {
-      const modelProperty = modelProp as keyof Table
-      const entityProperty = entityProp as keyof Entity
+    for (let i = 0; i < this.cachedMapperEntries.length; i++) {
+      const [modelProp, entityProp] = this.cachedMapperEntries[i];
+      entity[entityProp] = model[modelProp] as Entity[keyof Entity];
+    }
 
-      entity[entityProperty] = model[modelProperty] as Entity[keyof Entity]
-      return entity
-    }, initialValue)
+    return entity;
   }
 
   public getMappings(): Mapper<Table, Entity> {
-    return this.mapper
+    return this.mapper;
   }
 }
