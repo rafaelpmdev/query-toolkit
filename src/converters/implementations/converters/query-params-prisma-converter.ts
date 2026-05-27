@@ -1,3 +1,4 @@
+import { isNullOrUndefined } from '@raicamposs/toolkit';
 import { SortDirection } from '../../../common';
 import { QueryParamsOperator } from '../../../query-operator';
 import { QueryableFields } from '../../../types';
@@ -23,7 +24,10 @@ export class QueryParamsPrismaConverter<T = unknown>
   }
 
   sort(sort?: Record<string, SortDirection>): PrismaOrderByClause | undefined {
-    return sort;
+    if (isNullOrUndefined(sort)) return sort;
+    return Object.entries(sort).map(([key, value]) => ({
+      [key]: value,
+    }));
   }
 
   build(): Record<string, unknown> {
