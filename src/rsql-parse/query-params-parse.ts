@@ -4,13 +4,18 @@ import { QueryParamsOperator } from '../query-operator';
 import { QueryableFields, RsqlQueryParams } from '../types';
 import { OperatorRegistry } from './operator-registry';
 
-export type QueryParams = {
-  params: Record<string, Array<QueryParamsOperator>>;
-  sort?: Record<string, SortDirection>;
+export type ParamsOperators<T extends object> = Record<
+  Exclude<QueryableFields<T>, 'sort' | 'limit' | 'offset' | 'page' | 'cursor'>,
+  Array<QueryParamsOperator>
+>;
+
+export type QueryParams<T extends object> = {
+  params: ParamsOperators<T>;
+  sort?: Record<QueryableFields<T>, SortDirection>;
   pagination?: ClassicPage | CursorPage;
 };
 
-export class QueryParamsParse<T> {
+export class QueryParamsParse<T extends object> {
   private readonly validKeys: Set<QueryableFields<T>>;
 
   constructor(
@@ -20,7 +25,7 @@ export class QueryParamsParse<T> {
     this.validKeys = new Set(shape ? (Object.keys(shape) as QueryableFields<T>[]) : []);
   }
 
-  build(): QueryParams {
+  build(): QueryParams<T> {
     return {
       params: this.buildParams(),
       sort: this.buildSort(),
@@ -81,10 +86,7 @@ export class QueryParamsParse<T> {
     return undefined;
   }
 
-  private buildParams(): Record<
-    Exclude<QueryableFields<T>, 'sort' | 'limit' | 'offset' | 'page' | 'cursor'>,
-    Array<QueryParamsOperator>
-  > {
+  private buildParams(): ParamsOperators<T> {
     const IGNORED_KEYS = ['sort', 'limit', 'offset', 'page', 'cursor'];
     const output: Record<string, Array<QueryParamsOperator>> = {};
     ObjectEntries(coalesce(this.params, {})).reduce((acc, [key, value]) => {
