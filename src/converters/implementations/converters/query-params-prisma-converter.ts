@@ -7,7 +7,7 @@ import { IQueryParamsConverter } from '../../core/query-params-converter-interfa
 import { ISortConverter } from '../../core/sort-converter-interface';
 import { PrismaVisitor, PrismaWhereClause } from '../visitors/prisma-visitor';
 
-export type PrismaOrderByClause = Record<string, SortDirection>;
+export type PrismaOrderByClause = Array<Record<string, SortDirection>>;
 
 export class QueryParamsPrismaConverter<T = unknown>
   implements IQueryParamsConverter<unknown>, ISortConverter<PrismaOrderByClause>
