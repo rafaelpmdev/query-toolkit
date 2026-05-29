@@ -1,6 +1,8 @@
-import { describe, it, expect } from 'vitest';
-import { CursorPage } from './cursor-page';
+import { describe, expect, it } from 'vitest';
 import { CursorCodec, CursorPayload } from './cursor-codec';
+import { CursorPage } from './cursor-page';
+
+type Row = { id: number; name: string };
 
 describe('CursorPage', () => {
   const samplePayload: CursorPayload = {
@@ -68,6 +70,75 @@ describe('CursorPage', () => {
         direction: 'prev',
         orderBy,
       });
+    });
+  });
+
+  describe('direction: next', () => {
+    it('should set hasMore when query returns N+1 rows', () => {
+      const rows: Row[] = [
+        { id: 1, name: 'a' },
+        { id: 2, name: 'b' },
+        { id: 3, name: 'c' },
+      ];
+
+      const result = CursorPage.processResult(rows, 2, 'next', samplePayload.orderBy);
+
+      expect(result.data).toHaveLength(2);
+      expect(result.hasNext).toBe(true);
+    });
+
+    it('should not set hasMore when query returns exactly limit rows', () => {
+      const rows: Row[] = [
+        { id: 1, name: 'a' },
+        { id: 2, name: 'b' },
+      ];
+
+      const result = CursorPage.processResult(rows, 2, 'next', samplePayload.orderBy);
+
+      expect(result.data).toHaveLength(2);
+      expect(result.hasNext).toBe(false);
+    });
+  });
+
+  describe('direction: prev', () => {
+    it('should set hasPrev when query returns N+1 rows', () => {
+      const rows: Row[] = [
+        { id: 3, name: 'c' },
+        { id: 2, name: 'b' },
+        { id: 1, name: 'a' },
+      ];
+
+      const result = CursorPage.processResult(rows, 2, 'prev', samplePayload.orderBy);
+
+      expect(result.data).toHaveLength(2);
+      expect(result.hasPrev).toBe(true);
+    });
+
+    it('should not set hasPrev when query returns exactly limit rows', () => {
+      const rows: Row[] = [
+        { id: 2, name: 'b' },
+        { id: 1, name: 'a' },
+      ];
+
+      const result = CursorPage.processResult(rows, 2, 'prev', samplePayload.orderBy);
+
+      expect(result.data).toHaveLength(2);
+      expect(result.hasPrev).toBe(false);
+    });
+
+    it('should reverse row order for the consumer', () => {
+      const rows: Row[] = [
+        { id: 3, name: 'c' },
+        { id: 2, name: 'b' },
+        { id: 1, name: 'a' },
+      ];
+
+      const result = CursorPage.processResult(rows, 2, 'prev', samplePayload.orderBy);
+
+      expect(result.data).toEqual([
+        { id: 2, name: 'b' },
+        { id: 3, name: 'c' },
+      ]);
     });
   });
 });
