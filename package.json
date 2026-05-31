@@ -26,7 +26,7 @@
     "format:check": "prettier --check \"src/**/*.{ts,tsx,json,md}\""
   },
   "keywords": [],
-  "author": "",
+  "author": "Raiane Campos <raianejanu@hotmail.com>",
   "license": "MIT",
   "repository": {
     "type": "git",
