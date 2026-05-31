@@ -65,6 +65,11 @@ describe('OperatorRegistry & Extensibilidade OCP', () => {
     expect(list).toEqual(['v1', 'v2', 3.5]);
   });
 
+  it('deve extrair a lista corretamente mesmo se os valores contiverem o simbolo do operador', () => {
+    const list = parseRsqlListValue('in=valor1,in=valor2', 'in=');
+    expect(list).toEqual(['valor1', 'in=valor2']);
+  });
+
   it('deve retornar array vazio se o símbolo não coincidir ao parsear a lista', () => {
     const list = parseRsqlListValue('in=v1,v2', 'out=');
     expect(list).toEqual([]);

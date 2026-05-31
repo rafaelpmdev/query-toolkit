@@ -34,14 +34,10 @@ export abstract class QueryParamsOperator {
    */
   abstract accept<T>(visitor: OperatorVisitor<T>, field: string): T;
 
-  /**
-   * Helper to get the value part of the parameter string by removing the operator symbol.
-   */
   protected getRawValue(): string {
-    if (!this.params.includes(this.symbol)) {
+    if (!this.params.startsWith(this.symbol)) {
       return this.params;
     }
-    const [, value] = this.params.split(this.symbol);
-    return value;
+    return this.params.substring(this.symbol.length).trim();
   }
 }

@@ -40,4 +40,9 @@ describe('QueryParamsOperator Base Class', () => {
     const operator = new MockOperator('==', 'only_value');
     expect(operator.testGetRawValue()).toBe('only_value');
   });
+
+  it('deve extrair o valor corretamente mesmo se o valor contiver o caractere do operador RSQL', () => {
+    const operator = new MockOperator('==', '==valor==anomalo');
+    expect(operator.testGetRawValue()).toBe('valor==anomalo');
+  });
 });

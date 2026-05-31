@@ -88,6 +88,13 @@ describe('QueryParamsParse', () => {
       expect(sort?.age).toBe('desc');
       expect((sort as any).secret).toBeUndefined();
     });
+
+    it('should ignore sort if it is passed as an array (malformed params)', () => {
+      const params = { sort: ['name:asc', 'age:desc'] };
+      const parser = new QueryParamsParse<any>(params as any);
+      const { sort } = parser.build();
+      expect(sort).toBeUndefined();
+    });
   });
 
   describe('Pagination Strategies', () => {
@@ -139,6 +146,29 @@ describe('QueryParamsParse', () => {
       const paginationCursor = parserCursor.build().pagination;
 
       expect(paginationCursor?.limit).toBe(MAX_PAGE_LIMIT); // Capped at MAX_PAGE_LIMIT (250)
+    });
+
+    it('should gracefully handle arrays passed to cursor or offset', () => {
+      // Limit is valid, offset is array (invalid) -> early return kicks in and pagination is gracefully ignored
+      const paramsOffset = { limit: '50', offset: ['100', '200'] };
+      const parserOffset = new QueryParamsParse<any>(paramsOffset as any);
+      const paginationOffset = parserOffset.build().pagination;
+      expect(paginationOffset).toBeUndefined();
+
+      // Limit is valid, cursor is array (invalid) -> CursorPage without cursor
+      const paramsCursor = { limit: '20', cursor: ['abc', 'def'] };
+      const parserCursor = new QueryParamsParse<any>(paramsCursor as any);
+      const paginationCursor = parserCursor.build().pagination;
+      expect(paginationCursor).toBeInstanceOf(CursorPage);
+      expect((paginationCursor as CursorPage).limit).toBe(20);
+      expect((paginationCursor as CursorPage).cursor).toBeUndefined();
+    });
+
+    it('deve retornar paginação ignorada (undefined) quando arrays são passados onde números são esperados', () => {
+      const params = { limit: ['10', '20'], page: ['1', '2'] };
+      const parser = new QueryParamsParse<any>(params as any);
+      const { pagination } = parser.build();
+      expect(pagination).toBeUndefined();
     });
   });
 

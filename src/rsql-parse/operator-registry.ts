@@ -29,10 +29,10 @@ export function parseRsqlListValue(
   params: string,
   symbol: string
 ): Array<string | boolean | number | Date> {
-  if (!params.includes(symbol)) {
+  if (!params.startsWith(symbol)) {
     return [];
   }
-  const [, rawValue] = params.split(symbol);
+  const rawValue = params.substring(symbol.length).trim();
   if (!rawValue) {
     return [];
   }

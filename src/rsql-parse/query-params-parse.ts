@@ -55,31 +55,32 @@ export class QueryParamsParse<T extends object> {
     return undefined;
   }
 
+  private extractNumericParam(param: unknown): number | undefined {
+    if (typeof param !== 'string' && typeof param !== 'number') return undefined;
+    const num = Number(param);
+    return Number.isNaN(num) ? undefined : num;
+  }
+
   private buildPagination(): ClassicPage | CursorPage | undefined {
     if ('limit' in this.params && 'page' in this.params) {
-      const limit = Number(this.params.limit);
-      const page = Number(this.params.page);
-      if (Number.isNaN(limit) || Number.isNaN(page)) {
-        return undefined;
-      }
+      const limit = this.extractNumericParam(this.params.limit);
+      const page = this.extractNumericParam(this.params.page);
+      if (limit === undefined || page === undefined) return undefined;
       return new ClassicPage(limit, page);
     }
 
     if ('limit' in this.params && 'offset' in this.params) {
-      const limit = Number(this.params.limit);
-      const offset = Number(this.params.offset);
-      if (Number.isNaN(limit) || Number.isNaN(offset)) {
-        return undefined;
-      }
+      const limit = this.extractNumericParam(this.params.limit);
+      const offset = this.extractNumericParam(this.params.offset);
+      if (limit === undefined || offset === undefined) return undefined;
       return ClassicPage.fromOffset(offset, limit);
     }
 
     if ('limit' in this.params || 'cursor' in this.params) {
-      const limit = 'limit' in this.params ? Number(this.params.limit) : 20;
-      const cursor = 'cursor' in this.params ? (this.params.cursor as string) : undefined;
-      if (Number.isNaN(limit)) {
-        return undefined;
-      }
+      const limit = 'limit' in this.params ? this.extractNumericParam(this.params.limit) : 20;
+      const cursorValue = 'cursor' in this.params ? this.params.cursor : undefined;
+      const cursor = typeof cursorValue === 'string' ? cursorValue : undefined;
+      if (limit === undefined) return undefined;
       return new CursorPage(limit, cursor);
     }
 
