@@ -32,9 +32,6 @@
     "type": "git",
     "url": "git+https://github.com/Raicamposs/query-toolkit.git"
   },
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com"
-  },
   "devDependencies": {
     "@types/node": "^24.0.3",
     "@typescript-eslint/eslint-plugin": "^8.54.0",
