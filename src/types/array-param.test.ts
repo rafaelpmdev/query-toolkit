@@ -1,4 +1,4 @@
-import { isAssigned } from '@raicamposs/toolkit';
+import { isAssigned } from '@raicampos/toolkit';
 import { describe, expect, it } from 'vitest';
 import { ArrayParamsSchema } from './array-param';
 

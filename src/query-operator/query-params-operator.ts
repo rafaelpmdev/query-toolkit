@@ -11,7 +11,7 @@
 // Less than or equal to (lte=) : lte
 // Between (btw=) : btw
 
-import { Nullable } from '@raicamposs/toolkit';
+import { Nullable } from '@raicampos/toolkit';
 import type { OperatorVisitor } from '../converters';
 import { PrimitiveValueTypes } from '../sql-builder/core';
 import { RsqlCondition } from '../types';

@@ -1,4 +1,4 @@
-import { Nullable } from '@raicamposs/toolkit';
+import { Nullable } from '@raicampos/toolkit';
 import { z } from 'zod';
 import type { OperatorVisitor } from '../../converters';
 import { BoolSchema, DateSchema, NumberSchema, RsqlCondition, StringSchema } from '../../types';

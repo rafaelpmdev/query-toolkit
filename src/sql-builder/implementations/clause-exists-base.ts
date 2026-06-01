@@ -1,4 +1,4 @@
-import { isEmpty } from '@raicamposs/toolkit';
+import { isEmpty } from '@raicampos/toolkit';
 import { SqlInjectionDetector } from '../../common/sql-injection-detector';
 import { Clause } from '../core/clause';
 

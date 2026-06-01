@@ -1,4 +1,4 @@
-import { isNullOrUndefined } from '@raicamposs/toolkit';
+import { isNullOrUndefined } from '@raicampos/toolkit';
 import { SortDirection } from '../../../common';
 import { QueryParamsOperator } from '../../../query-operator';
 import { QueryableFields } from '../../../types';

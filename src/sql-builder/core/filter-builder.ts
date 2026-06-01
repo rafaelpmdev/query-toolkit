@@ -1,4 +1,4 @@
-import { isEmpty, isNullOrUndefined } from '@raicamposs/toolkit';
+import { isEmpty, isNullOrUndefined } from '@raicampos/toolkit';
 import { QueryableFields } from '../../types';
 import { Clause } from './clause';
 import { SQL_BUILDER_CONSTANTS } from './constants';

@@ -1,4 +1,4 @@
-import { isAssigned, isEmpty, isNullOrUndefined } from '@raicamposs/toolkit';
+import { isAssigned, isEmpty, isNullOrUndefined } from '@raicampos/toolkit';
 import { Clause } from '../core/clause';
 import { PrimitiveValue } from '../core/primitive-value';
 

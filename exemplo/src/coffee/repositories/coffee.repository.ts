@@ -1,5 +1,5 @@
-import { CursorPage, QueryParamsOperator, SortDirection } from "@raicamposs/query-toolkit";
-import { Nullable } from "@raicamposs/toolkit";
+import { Nullable } from "@raicampos/oolkit";
+import { CursorPage, QueryParamsOperator, SortDirection } from "@raicampos/query-toolkit";
 import { CreateCoffeeData } from "../dto/create-coffee-data";
 import { Coffee } from "../entities/coffee";
 

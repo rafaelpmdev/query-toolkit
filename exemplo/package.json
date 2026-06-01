@@ -1,7 +1,7 @@
 {
   "name": "query-toolkit-example",
   "version": "1.0.0",
-  "description": "Projeto de exemplo oficial da biblioteca @raicamposs/query-toolkit — showcase completo com Fastify + Prisma + PostgreSQL em Docker",
+  "description": "Projeto de exemplo oficial da biblioteca @raicampos/query-toolkit — showcase completo com Fastify + Prisma + PostgreSQL em Docker",
   "main": "dist/server.js",
   "scripts": {
     "dev": "tsx watch src/server.ts",
@@ -22,15 +22,15 @@
     "docker",
     "example"
   ],
-  "author": "Raicamposs",
+  "author": "raicampos",
   "license": "MIT",
   "dependencies": {
     "@fastify/swagger": "^9.7.0",
     "@fastify/swagger-ui": "^5.2.6",
     "@prisma/adapter-pg": "^7.0.0",
     "@prisma/client": "^7.0.0",
-    "@raicamposs/query-toolkit": "file:..",
-    "@raicamposs/toolkit": "^1.0.8",
+    "@raicampos/uery-toolkit": "file:..",
+    "@raicampos/oolkit": "^1.0.8",
     "pg": "^8.11.5",
     "qs": "^6.15.2",
     "zod": "^3.23.8"

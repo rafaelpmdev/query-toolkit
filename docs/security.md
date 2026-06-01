@@ -1,6 +1,6 @@
 # 🛡️ Segurança, Limites & Boas Práticas
 
-A segurança de dados é um pilar fundamental do `@raicamposs/query-toolkit`. A biblioteca implementa proteções ativas e passivas para blindar a camada de dados da sua aplicação contra ataques cibernéticos comuns (especialmente **SQL Injection**) e exaustão de recursos do servidor.
+A segurança de dados é um pilar fundamental do `@raicampos/query-toolkit`. A biblioteca implementa proteções ativas e passivas para blindar a camada de dados da sua aplicação contra ataques cibernéticos comuns (especialmente **SQL Injection**) e exaustão de recursos do servidor.
 
 ---
 
@@ -37,7 +37,7 @@ Consultas dinâmicas excessivamente grandes podem derrubar bancos de dados de pr
 Para evitar isso, o `SqlBuilder` possui limites de segurança pré-configurados que você pode ajustar conforme o perfil do seu ambiente:
 
 ```typescript
-import { SqlBuilder } from '@raicamposs/query-toolkit';
+import { SqlBuilder } from '@raicampos/uery-toolkit';
 
 const builder = new SqlBuilder('users', undefined, {
   maxWhereClauses: 30,    // Impede o envio de mais de 30 condições WHERE aninhadas

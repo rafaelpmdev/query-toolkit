@@ -12,7 +12,7 @@ A geração de consultas manuais concatenando strings é propensa a erros e vuln
 Sempre utilize o método `build()` em produção para que placeholders indexados (estilo PostgreSQL: `$1`, `$2`) sejam gerados separadamente dos valores reais.
 
 ```typescript
-import { SqlBuilder, ClauseEquals, ClauseGreaterThan } from '@raicamposs/query-toolkit';
+import { SqlBuilder, ClauseEquals, ClauseGreaterThan } from '@raicampos/query-toolkit';
 
 const builder = new SqlBuilder('users');
 builder.add(new ClauseEquals('status', 'active'));
@@ -30,7 +30,7 @@ const { sql, params } = builder.build();
 O `SqlBuilder` disponibiliza diversos métodos utilitários que facilitam a criação de cláusulas sem instanciar classes manualmente:
 
 ```typescript
-import { SqlBuilder } from '@raicamposs/query-toolkit';
+import { SqlBuilder } from '@raicampos/uery-toolkit';
 
 const query = new SqlBuilder('SELECT id, name FROM employees')
   .whereEquals('department', 'Engineering')

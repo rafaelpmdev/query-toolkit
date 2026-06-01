@@ -1,4 +1,4 @@
-import { Nullable } from '@raicamposs/toolkit';
+import { Nullable } from '@raicampos/toolkit';
 import { describe, expect, it } from 'vitest';
 import { OperatorVisitor } from '../converters';
 import { PrimitiveValueTypes } from '../sql-builder/core';

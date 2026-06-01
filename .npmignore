@@ -1,0 +1,24 @@
+# Diretórios que não devem ser publicados
+src/
+coverage/
+exemplo/
+.github/
+.instructions/
+.agent/
+.vscode/
+
+# Arquivos de configuração de desenvolvimento
+*.test.ts
+*.spec.ts
+vitest.config.ts
+tsconfig.json
+.prettierrc
+.prettierignore
+.gitattributes
+.gitignore
+
+# Arquivos de testes distribuídos (gerados pelo tsc)
+dist/**/*.test.js
+dist/**/*.test.d.ts
+dist/**/*.spec.js
+dist/**/*.spec.d.ts

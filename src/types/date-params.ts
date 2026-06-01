@@ -1,4 +1,4 @@
-import { isAssigned } from '@raicamposs/toolkit';
+import { isAssigned } from '@raicampos/toolkit';
 import { z } from 'zod';
 import { BaseParamSchema } from './base-params';
 

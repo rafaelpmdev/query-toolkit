@@ -1,5 +1,5 @@
 {
-  "name": "@raicamposs/query-toolkit",
+  "name": "@raicampos/query-toolkit",
   "version": "1.1.2",
   "description": "Pacote de ferramentas para queries. RSQL, filtros, paginação e ordenação.",
   "main": "dist/index.js",
@@ -30,7 +30,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Raicamposs/query-toolkit.git"
+    "url": "git+https://github.com/raicampos/query-toolkit.git"
   },
   "devDependencies": {
     "@types/node": "^24.0.3",
@@ -45,8 +45,12 @@
     "typescript-eslint": "^8.54.0",
     "vitest": "^3.2.4"
   },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
   "dependencies": {
-    "@raicamposs/toolkit": "^1.0.8",
+    "@raicampos/toolkit": "^1.1.1",
     "zod": "^4.3.6"
   }
 }

@@ -1,6 +1,6 @@
-# 🗺️ Documentação Técnica — @raicamposs/query-toolkit
+# 🗺️ Documentação Técnica — @raicampos/query-toolkit
 
-Bem-vindo à documentação técnica oficial do `@raicamposs/query-toolkit`. Este repositório fornece uma biblioteca robusta, extensível e de alto desempenho projetada em TypeScript para simplificar o ecossistema de dados das suas aplicações.
+Bem-vindo à documentação técnica oficial do `@raicampos/uery-toolkit`. Este repositório fornece uma biblioteca robusta, extensível e de alto desempenho projetada em TypeScript para simplificar o ecossistema de dados das suas aplicações.
 
 A biblioteca resolve de maneira definitiva o tratamento de queries dinâmicas na Web, desde o parsing de parâmetros na URL (sintaxe **RSQL**) até a geração de cláusulas relacionais seguras e integração transparente com ORMs modernos (como o **Prisma ORM**).
 
@@ -29,7 +29,7 @@ Explore os detalhes de segurança nativos da biblioteca, incluindo o analisador 
 
 ## 🚀 Filosofia de Design e Arquitetura Clean
 
-O design do `@raicamposs/query-toolkit` é firmemente ancorado nos conceitos de **Clean Architecture** e **Clean Code**:
+O design do `@raicampos/uery-toolkit` é firmemente ancorado nos conceitos de **Clean Architecture** e **Clean Code**:
 
 * **Princípio da Responsabilidade Única (SRP)**: O parsing sintático da URL, a validação de formato e a geração SQL/ORM são operações completamente isoladas e modulares.
 * **Tipagem Estrita**: Sem asserções dinâmicas obscuras. Tipagens fortes do TypeScript (`QueryableFields<T>`) guiam o desenvolvedor em tempo de escrita, oferecendo excelente suporte à IDE e autocomplete.

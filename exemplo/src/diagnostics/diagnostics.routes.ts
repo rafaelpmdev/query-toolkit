@@ -1,4 +1,4 @@
-import { QueryParamsParse } from '@raicamposs/query-toolkit';
+import { QueryParamsParse } from '@raicampos/query-toolkit';
 import { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
 import { Coffee } from '../coffee/entities/coffee';
 

@@ -1,4 +1,4 @@
-import { CursorPage, QueryParamsPrismaConverter } from '@raicamposs/query-toolkit';
+import { CursorPage, QueryParamsPrismaConverter } from '@raicampos/query-toolkit';
 import { prisma } from '../../database';
 import { CreateCoffeeData } from '../dto/create-coffee-data';
 import { Coffee } from '../entities/coffee';

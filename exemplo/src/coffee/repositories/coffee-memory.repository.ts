@@ -8,8 +8,8 @@
  */
 
 import { Coffee } from "@prisma/client";
-import { CursorPage } from "@raicamposs/query-toolkit";
-import { Nullable } from "@raicamposs/toolkit";
+import { Nullable } from "@raicampos/oolkit";
+import { CursorPage } from "@raicampos/query-toolkit";
 import { CreateCoffeeData } from "../dto/create-coffee-data";
 import { ICoffeeRepository, ListCoffeesParams, ListCoffeesResult } from "./coffee.repository";
 

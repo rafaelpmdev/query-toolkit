@@ -1,4 +1,4 @@
-import { isNullOrUndefined, Nullable } from '@raicamposs/toolkit';
+import { isNullOrUndefined, Nullable } from '@raicampos/toolkit';
 import { parseRsqlValue } from '../../common/date-parser';
 import type { OperatorVisitor } from '../../converters';
 import { RsqlCondition } from '../../types';

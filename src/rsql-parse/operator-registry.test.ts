@@ -18,7 +18,7 @@ import {
 } from '../query-operator';
 import { QueryParamsOperator } from '../query-operator';
 import { OperatorVisitor } from '../converters';
-import { Nullable } from '@raicamposs/toolkit';
+import { Nullable } from '@raicampos/toolkit';
 import { RsqlCondition } from '../types';
 import { OperatorRegistry, parseRsqlListValue } from './operator-registry';
 

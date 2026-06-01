@@ -1,4 +1,4 @@
-import { isAssigned, Nullable } from '@raicamposs/toolkit';
+import { isAssigned, Nullable } from '@raicampos/toolkit';
 import { PrimitiveValue, PrimitiveValueTypes } from './primitive-value';
 import { TransformFunction } from './transform-function';
 

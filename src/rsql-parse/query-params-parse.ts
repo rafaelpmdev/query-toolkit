@@ -1,4 +1,4 @@
-import { coalesce, isEmpty, ObjectEntries } from '@raicamposs/toolkit';
+import { coalesce, isEmpty, ObjectEntries } from '@raicampos/toolkit';
 import { ClassicPage, CursorPage, SortDirection, SortParser } from '../common';
 import { QueryParamsOperator } from '../query-operator';
 import { QueryableFields, RsqlQueryParams } from '../types';

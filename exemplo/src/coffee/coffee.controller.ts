@@ -1,4 +1,4 @@
-import { CursorPage, QueryParamsParse, RsqlQueryParams } from '@raicamposs/query-toolkit';
+import { CursorPage, QueryParamsParse, RsqlQueryParams } from '@raicampos/query-toolkit';
 import type { FastifyReply, FastifyRequest } from 'fastify';
 import { z } from 'zod';
 import { CoffeeContainer } from './coffee.container';

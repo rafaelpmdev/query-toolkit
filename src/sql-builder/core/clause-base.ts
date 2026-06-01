@@ -1,4 +1,4 @@
-import { isEmpty } from '@raicamposs/toolkit';
+import { isEmpty } from '@raicampos/toolkit';
 import { Clause, ParameterizedQuery } from './clause';
 
 import { PrimitiveValue, PrimitiveValueTypes } from './primitive-value';

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { coalesce, isAssigned, isNullOrUndefined, JSONConverter } from '@raicamposs/toolkit';
+import { coalesce, isAssigned, isNullOrUndefined, JSONConverter } from '@raicampos/toolkit';
 import { Mapper } from './mapper';
 
 export type PropertyConverter<Table, Entity, K extends keyof Entity> = (

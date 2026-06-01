@@ -1,4 +1,4 @@
-import { isEmpty } from '@raicamposs/toolkit';
+import { isEmpty } from '@raicampos/toolkit';
 import { Clause } from '../core/clause';
 import { PrimitiveArrayValue } from '../core/primitive-array-value';
 import { PrimitiveValueTypes } from '../core/primitive-value';

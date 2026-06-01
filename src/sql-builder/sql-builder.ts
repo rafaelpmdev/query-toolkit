@@ -1,4 +1,4 @@
-import { isNullOrUndefined, Nullable } from '@raicamposs/toolkit';
+import { isNullOrUndefined, Nullable } from '@raicampos/toolkit';
 import { QueryableFields } from '../types';
 import { ParameterizedQuery } from './core/clause';
 import { SqlBuilderConfig } from './core/config';

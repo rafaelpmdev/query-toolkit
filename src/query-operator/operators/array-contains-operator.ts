@@ -1,4 +1,4 @@
-import { isNullOrUndefined, Nullable } from '@raicamposs/toolkit';
+import { isNullOrUndefined, Nullable } from '@raicampos/toolkit';
 import type { OperatorVisitor } from '../../converters';
 import { ArrayParamsValuesSchema, RsqlCondition } from '../../types';
 import { QueryParamsOperator } from '../query-params-operator';

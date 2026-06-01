@@ -1,4 +1,4 @@
-import { Nullable } from '@raicamposs/toolkit';
+import { Nullable } from '@raicampos/toolkit';
 import { Clause } from '../core/clause';
 import { PrimitiveValueTypes } from '../core/primitive-value';
 
