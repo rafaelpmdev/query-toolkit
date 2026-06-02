@@ -5,14 +5,46 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "exports": {
-    ".": "./dist/index.js",
-    "./common": "./dist/common/index.js",
-    "./converters": "./dist/converters/index.js",
-    "./mappers": "./dist/mappers/index.js",
-    "./query-operator": "./dist/query-operator/index.js",
-    "./rsql-parse": "./dist/rsql-parse/index.js",
-    "./sql-builder": "./dist/sql-builder/index.js",
-    "./types": "./dist/types/index.js"
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.js"
+    },
+    "./common": {
+      "types": "./dist/common/index.d.ts",
+      "import": "./dist/common/index.js",
+      "require": "./dist/common/index.js"
+    },
+    "./converters": {
+      "types": "./dist/converters/index.d.ts",
+      "import": "./dist/converters/index.js",
+      "require": "./dist/converters/index.js"
+    },
+    "./mappers": {
+      "types": "./dist/mappers/index.d.ts",
+      "import": "./dist/mappers/index.js",
+      "require": "./dist/mappers/index.js"
+    },
+    "./query-operator": {
+      "types": "./dist/query-operator/index.d.ts",
+      "import": "./dist/query-operator/index.js",
+      "require": "./dist/query-operator/index.js"
+    },
+    "./rsql-parse": {
+      "types": "./dist/rsql-parse/index.d.ts",
+      "import": "./dist/rsql-parse/index.js",
+      "require": "./dist/rsql-parse/index.js"
+    },
+    "./sql-builder": {
+      "types": "./dist/sql-builder/index.d.ts",
+      "import": "./dist/sql-builder/index.js",
+      "require": "./dist/sql-builder/index.js"
+    },
+    "./types": {
+      "types": "./dist/types/index.d.ts",
+      "import": "./dist/types/index.js",
+      "require": "./dist/types/index.js"
+    }
   },
   "scripts": {
     "version": "npm version patch",
@@ -37,7 +69,7 @@
     "sql",
     "builder"
   ],
-  "author": "Raí Campos <rai.campos@example.com>",
+  "author": "Raiane Campos <[EMAIL_ADDRESS]>",
   "license": "MIT",
   "repository": {
     "type": "git",
