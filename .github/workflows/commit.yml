@@ -67,3 +67,6 @@ jobs:
 
       - name: Verificar Compilação (TypeScript)
         run: npm run build
+
+      - name: Validar Empacotamento (Dry-Run)
+        run: npm publish --dry-run
