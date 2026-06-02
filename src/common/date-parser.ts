@@ -2,10 +2,12 @@ import { isNullOrUndefined } from '@raicamposs/toolkit';
 import { z } from 'zod';
 import { DateRsqlRegex } from './date-regex';
 
+const BOOL_STRINGS = new Set(['TRUE', 'FALSE', 'S', 'N']);
+
 /**
- * Centralized utility for parsing RSQL values (dates, numbers, strings)
+ * Centralized utility for parsing RSQL values (dates, numbers, booleans, strings)
  */
-export function parseRsqlValue(value: string): string | number | Date {
+export function parseRsqlValue(value: string): string | number | boolean | Date {
   if (isNullOrUndefined(value)) return value;
 
   // Try parsing as number
@@ -21,6 +23,11 @@ export function parseRsqlValue(value: string): string | number | Date {
     } catch {
       return value;
     }
+  }
+
+  // Try parsing as boolean
+  if (value?.trim()?.length > 0 && BOOL_STRINGS.has(value.toUpperCase().trim())) {
+    return value.toUpperCase().trim() === 'TRUE' || value.toUpperCase().trim() === 'S';
   }
 
   return value;

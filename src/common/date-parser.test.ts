@@ -26,6 +26,19 @@ describe('date-parser', () => {
     expect(parseRsqlValue('not-a-value')).toBe('not-a-value');
   });
 
+  it('should parse boolean strings to boolean', () => {
+    expect(parseRsqlValue('true')).toBe(true);
+    expect(parseRsqlValue('TRUE')).toBe(true);
+    expect(parseRsqlValue('True')).toBe(true);
+    expect(parseRsqlValue('S')).toBe(true);
+    expect(parseRsqlValue('s')).toBe(true);
+    expect(parseRsqlValue('false')).toBe(false);
+    expect(parseRsqlValue('FALSE')).toBe(false);
+    expect(parseRsqlValue('False')).toBe(false);
+    expect(parseRsqlValue('N')).toBe(false);
+    expect(parseRsqlValue('n')).toBe(false);
+  });
+
   it('should return null/undefined as is', () => {
     expect(parseRsqlValue(null as any)).toBe(null);
     expect(parseRsqlValue(undefined as any)).toBe(undefined);

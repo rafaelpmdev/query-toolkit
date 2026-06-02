@@ -9,10 +9,13 @@ export class BetweenOperator extends QueryParamsOperator {
     super('btw=', params);
   }
 
-  value() {
+  value(): [string | number | Date, string | number | Date] {
     const [gte, lte] = this.getRawValue().split(',');
 
-    return [parseRsqlValue(gte), parseRsqlValue(lte)];
+    return [
+      parseRsqlValue(gte) as string | number | Date,
+      parseRsqlValue(lte) as string | number | Date,
+    ];
   }
 
   query(): Nullable<RsqlCondition> {
