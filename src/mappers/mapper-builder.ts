@@ -1,4 +1,4 @@
-import { coalesce, isAssigned, isNullOrUndefined, JSONConverter } from '@raicamposs/toolkit';
+import { coalesce, isAssigned, isNullOrUndefined, JSONConverter } from '@raicampos/toolkit';
 import { Mapper } from './mapper';
 
 export type PropertyConverter<Table, Entity, K extends keyof Entity> = (
@@ -14,10 +14,7 @@ export type PropertyConverter<Table, Entity, K extends keyof Entity> = (
  * @typeParam Table - The interface/type representing the database table record.
  * @typeParam Entity - The interface/type representing the domain entity.
  */
-export class MapperBuilder<
-  Table extends Record<string, unknown>,
-  Entity extends Record<string, unknown>,
-> {
+export class MapperBuilder<Table extends object, Entity extends object> {
   private readonly convert: Map<keyof Entity, PropertyConverter<Table, Entity, keyof Entity>> =
     new Map();
   private readonly cachedMapperEntries: [keyof Table, keyof Entity][];

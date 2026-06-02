@@ -128,4 +128,54 @@ describe('Pagination', () => {
       expect(pagination.previous).toBe(2);
     });
   });
+
+  describe('fromOffset', () => {
+    it('should return page 1 when offset is 0', () => {
+      const pagination = ClassicPage.fromOffset(0, 10);
+      expect(pagination.page).toBe(1);
+      expect(pagination.limit).toBe(10);
+    });
+
+    it('should calculate page correctly from offset and limit', () => {
+      const pagination = ClassicPage.fromOffset(20, 10);
+      expect(pagination.page).toBe(3);
+      expect(pagination.limit).toBe(10);
+    });
+
+    it('should handle offset equal to limit (page 2)', () => {
+      const pagination = ClassicPage.fromOffset(10, 10);
+      expect(pagination.page).toBe(2);
+    });
+  });
+
+  describe('toJSON', () => {
+    it('should serialize all pagination fields to a plain object', () => {
+      const pagination = new ClassicPage(10, 2);
+      pagination.setTotal(30);
+
+      expect(pagination.toJSON()).toEqual({
+        limit: 10,
+        page: 2,
+        offset: 10,
+        total: 30,
+        next: 3,
+        previous: 1,
+        hasNext: true,
+        hasPrevious: true,
+        totalPages: 3,
+      });
+    });
+
+    it('should serialize correctly when total is undefined', () => {
+      const pagination = new ClassicPage(10, 1);
+      const json = pagination.toJSON();
+
+      expect(json.total).toBeUndefined();
+      expect(json.next).toBeUndefined();
+      expect(json.previous).toBeUndefined();
+      expect(json.hasNext).toBe(false);
+      expect(json.hasPrevious).toBe(false);
+      expect(json.totalPages).toBe(0);
+    });
+  });
 });

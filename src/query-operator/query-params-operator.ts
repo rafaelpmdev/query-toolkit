@@ -1,4 +1,4 @@
-import { isAssigned, isNullOrUndefined, Nullable } from '@raicamposs/toolkit';
+import { isAssigned, isNullOrUndefined, Nullable } from '@raicampos/toolkit';
 import { OperatorSymbolType } from '../common/types/operator-symbol';
 import type { OperatorVisitor } from '../converters';
 
@@ -34,15 +34,11 @@ export abstract class QueryParamsOperator<Condition, ValueType> {
    */
   abstract accept<T>(visitor: OperatorVisitor<T>, field: string): T;
 
-  /**
-   * Helper to get the value part of the parameter string by removing the operator symbol.
-   */
   protected getRawValue(): string {
-    if (!this.symbol || !this.params.includes(this.symbol)) {
+    if (!this.params.startsWith(this.symbol)) {
       return this.params;
     }
-    const [, value] = this.params.split(this.symbol);
-    return value;
+    return this.params.substring(this.symbol.length).trim();
   }
 
   isValid(): this is QueryParamsOperatorSuccess<ValueType> {

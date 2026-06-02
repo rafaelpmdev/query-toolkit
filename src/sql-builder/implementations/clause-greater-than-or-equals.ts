@@ -1,4 +1,4 @@
-import { isNullOrUndefined } from '@raicamposs/toolkit';
+import { isNullOrUndefined } from '@raicampos/toolkit';
 import { ClauseBase } from '../core/clause-base';
 import { PrimitiveValueType } from '../../common/types/primitive-value';
 

@@ -1,4 +1,4 @@
-import { Nullable } from '@raicamposs/toolkit';
+import { Nullable } from '@raicampos/toolkit';
 import { LessThanOrEqualsCondition } from '../../common/types';
 import { PrimitiveValue } from '../../common/types/primitive-value';
 import type { OperatorVisitor } from '../../converters';

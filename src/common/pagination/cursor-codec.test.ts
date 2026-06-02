@@ -34,10 +34,50 @@ describe('CursorCodec', () => {
     });
 
     it('should return null when decoding a cursor with non-JSON content', () => {
-      // Codifica "hello world" simples em base64, que não é um JSON válido
       const invalidJsonBase64 = Buffer.from('hello world', 'utf-8').toString('base64');
       const decoded = CursorCodec.decode(invalidJsonBase64);
       expect(decoded).toBeNull();
+    });
+
+    it('should return null when decoding a cursor with valid JSON but missing v field', () => {
+      const missingV = Buffer.from(JSON.stringify({ d: 1, o: {} }), 'utf-8').toString('base64');
+      const decoded = CursorCodec.decode(missingV);
+      expect(decoded).toBeNull();
+    });
+
+    it('should return null when decoding an empty JSON object', () => {
+      const emptyObj = Buffer.from(JSON.stringify({}), 'utf-8').toString('base64');
+      const decoded = CursorCodec.decode(emptyObj);
+      expect(decoded).toBeNull();
+    });
+
+    it('should decode direction prev when d is 0', () => {
+      const prevPayload: CursorPayload = {
+        values: { id: 5 },
+        direction: 'prev',
+        orderBy: { id: 'asc' },
+      };
+      const cursor = CursorCodec.encode(prevPayload);
+      const decoded = CursorCodec.decode(cursor);
+      expect(decoded?.direction).toBe('prev');
+    });
+
+    it('should decode orderBy desc when o value is 0', () => {
+      const descPayload: CursorPayload = {
+        values: { id: 10 },
+        direction: 'next',
+        orderBy: { id: 'desc' },
+      };
+      const cursor = CursorCodec.encode(descPayload);
+      const decoded = CursorCodec.decode(cursor);
+      expect(decoded?.orderBy).toEqual({ id: 'desc' });
+    });
+
+    it('should handle cursor without o field by returning empty orderBy', () => {
+      const noO = Buffer.from(JSON.stringify({ v: { id: 1 }, d: 1 }), 'utf-8').toString('base64');
+      const decoded = CursorCodec.decode(noO);
+      expect(decoded).not.toBeNull();
+      expect(decoded?.orderBy).toEqual({});
     });
   });
 });

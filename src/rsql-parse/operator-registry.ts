@@ -1,5 +1,5 @@
 import { PrimitiveValue, PrimitiveValueType } from '../common/types/primitive-value';
-import { Nullable } from '@raicamposs/toolkit';
+import { Nullable } from '@raicampos/toolkit';
 import { OperatorSymbol, OperatorSymbolType } from '../common/types/operator-symbol';
 import {
   ArrayContainsOperator,
@@ -30,10 +30,10 @@ export function parseRsqlListValue(
   params: string,
   symbol: string
 ): Array<Nullable<PrimitiveValueType>> {
-  if (!params.includes(symbol)) {
+  if (!params.startsWith(symbol)) {
     return [];
   }
-  const [, rawValue] = params.split(symbol);
+  const rawValue = params.substring(symbol.length).trim();
   if (!rawValue) {
     return [];
   }

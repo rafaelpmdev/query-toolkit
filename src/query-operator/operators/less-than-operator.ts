@@ -1,4 +1,4 @@
-import { Nullable } from '@raicamposs/toolkit';
+import { Nullable } from '@raicampos/toolkit';
 import { LessThanCondition } from '../../common/types';
 import { PrimitiveValue } from '../../common/types/primitive-value';
 import type { OperatorVisitor } from '../../converters';
@@ -20,7 +20,9 @@ export class LessThanOperator extends QueryParamsOperator<
     if (value === null || value === undefined) {
       return { success: false, error: `Invalid value for ${this.symbol} operator` };
     }
-    if (this.isArray()) { return { success: false, error: 'Expected single value, got array' }; }
+    if (this.isArray()) {
+      return { success: false, error: 'Expected single value, got array' };
+    }
     return { success: true, value };
   }
 

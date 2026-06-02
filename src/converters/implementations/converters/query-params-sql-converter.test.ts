@@ -49,4 +49,17 @@ describe('QueryParamsSqlConverter', () => {
     const result = converter.build();
     expect(result).toEqual({});
   });
+
+  describe('sort()', () => {
+    it('should pass through the sort record unchanged', () => {
+      const converter = new QueryParamsSqlConverter({});
+      const sortRecord = { name: 'asc' as const, price: 'desc' as const };
+      expect(converter.sort(sortRecord)).toEqual(sortRecord);
+    });
+
+    it('should return undefined when sort is undefined', () => {
+      const converter = new QueryParamsSqlConverter({});
+      expect(converter.sort(undefined)).toBeUndefined();
+    });
+  });
 });

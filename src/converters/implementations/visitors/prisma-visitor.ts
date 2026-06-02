@@ -1,4 +1,4 @@
-import { isNullOrUndefined } from '@raicamposs/toolkit';
+import { isNullOrUndefined } from '@raicampos/toolkit';
 import type { ArrayContainsOperator } from '../../../query-operator/operators/array-contains-operator';
 import type { ArrayIsContainedByOperator } from '../../../query-operator/operators/array-is-contained-by-operator';
 import type { ArrayOverlapOperator } from '../../../query-operator/operators/array-overlap-operator';

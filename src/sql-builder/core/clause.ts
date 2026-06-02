@@ -1,4 +1,4 @@
-import { Nullable } from '@raicamposs/toolkit';
+import { Nullable } from '@raicampos/toolkit';
 import { PrimitiveValueType } from '../../common/types/primitive-value';
 import { TransformFunction } from './transform-function';
 /**

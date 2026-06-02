@@ -88,6 +88,13 @@ describe('QueryParamsParse', () => {
       expect(sort?.age).toBe('desc');
       expect((sort as any).secret).toBeUndefined();
     });
+
+    it('should ignore sort if it is passed as an array (malformed params)', () => {
+      const params = { sort: ['name:asc', 'age:desc'] };
+      const parser = new QueryParamsParse<any>(params as any);
+      const { sort } = parser;
+      expect(sort).toBeUndefined();
+    });
   });
 
   describe('Pagination Strategies', () => {
@@ -140,6 +147,29 @@ describe('QueryParamsParse', () => {
 
       expect(paginationCursor?.limit).toBe(MAX_PAGE_LIMIT); // Capped at MAX_PAGE_LIMIT (250)
     });
+
+    it('should gracefully handle arrays passed to cursor or offset', () => {
+      // Limit is valid, offset is array (invalid) -> early return kicks in and pagination is gracefully ignored
+      const paramsOffset = { limit: '50', offset: ['100', '200'] };
+      const parserOffset = new QueryParamsParse<any>(paramsOffset as any);
+      const paginationOffset = parserOffset.pagination;
+      expect(paginationOffset).toBeUndefined();
+
+      // Limit is valid, cursor is array (invalid) -> CursorPage without cursor
+      const paramsCursor = { limit: '20', cursor: ['abc', 'def'] };
+      const parserCursor = new QueryParamsParse<any>(paramsCursor as any);
+      const paginationCursor = parserCursor.pagination;
+      expect(paginationCursor).toBeInstanceOf(CursorPage);
+      expect((paginationCursor as CursorPage).limit).toBe(20);
+      expect((paginationCursor as CursorPage).cursor).toBeUndefined();
+    });
+
+    it('deve retornar paginação ignorada (undefined) quando arrays são passados onde números são esperados', () => {
+      const params = { limit: ['10', '20'], page: ['1', '2'] };
+      const parser = new QueryParamsParse<any>(params as any);
+      const { pagination } = parser;
+      expect(pagination).toBeUndefined();
+    });
   });
 
   describe('asRsqlOperatorsObject Conversion', () => {
@@ -151,6 +181,47 @@ describe('QueryParamsParse', () => {
       expect(result).toBeDefined();
       expect(result.name).toEqual({ equals: 'John' });
       expect(result.age).toEqual({ gt: 18 });
+    });
+  });
+
+  describe('Boolean Preprocessing', () => {
+    interface BooleanTest {
+      isActive: boolean;
+      name: string;
+    }
+
+    it('should normalize boolean query values from string representations like S/N/TRUE/FALSE to boolean values', () => {
+      const shape = { isActive: 'boolean', name: 'string' } as const;
+
+      // S (true)
+      const parser1 = new QueryParamsParse<BooleanTest>({ isActive: '==S' }, shape);
+      expect(parser1.validate().success).toBe(true);
+      expect(parser1.asRsqlOperatorsObject().isActive).toEqual({ equals: true });
+
+      // N (false)
+      const parser2 = new QueryParamsParse<BooleanTest>({ isActive: '==N' }, shape);
+      expect(parser2.validate().success).toBe(true);
+      expect(parser2.asRsqlOperatorsObject().isActive).toEqual({ equals: false });
+
+      // TRUE (true)
+      const parser3 = new QueryParamsParse<BooleanTest>({ isActive: '==TRUE' }, shape);
+      expect(parser3.validate().success).toBe(true);
+      expect(parser3.asRsqlOperatorsObject().isActive).toEqual({ equals: true });
+
+      // FALSE (false)
+      const parser4 = new QueryParamsParse<BooleanTest>({ isActive: '==FALSE' }, shape);
+      expect(parser4.validate().success).toBe(true);
+      expect(parser4.asRsqlOperatorsObject().isActive).toEqual({ equals: false });
+
+      // In operators in=(S,N)
+      const parser5 = new QueryParamsParse<BooleanTest>({ isActive: 'in=(S,N)' }, shape);
+      expect(parser5.validate().success).toBe(true);
+      expect(parser5.asRsqlOperatorsObject().isActive).toEqual({ in: [true, false] });
+
+      // Should not touch string fields like name
+      const parser6 = new QueryParamsParse<BooleanTest>({ name: '==S' }, shape);
+      expect(parser6.validate().success).toBe(true);
+      expect(parser6.asRsqlOperatorsObject().name).toEqual({ equals: 'S' });
     });
   });
 });

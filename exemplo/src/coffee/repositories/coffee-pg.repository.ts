@@ -6,13 +6,13 @@
  */
 
 import { Coffee } from '@prisma/client';
+import { ObjectEntries } from '@raicampos/toolkit';
 import {
   CursorPage,
   QueryParamsSqlConverter,
   SqlBuilder,
   applyCursor,
-} from '@raicamposs/query-toolkit';
-import { ObjectEntries } from '@raicamposs/toolkit';
+} from '@raicampos/query-toolkit';
 import { pool } from '../../database';
 import { CreateCoffeeData } from '../dto/create-coffee-data';
 import type {

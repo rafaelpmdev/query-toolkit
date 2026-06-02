@@ -1,7 +1,7 @@
-import Fastify from 'fastify';
 import cors from '@fastify/cors';
 import swagger from '@fastify/swagger';
 import swaggerUi from '@fastify/swagger-ui';
+import Fastify from 'fastify';
 import qs from 'qs';
 import { coffeeRoutes } from './coffee/coffee.routes';
 import { diagnosticsRoutes } from './diagnostics/diagnostics.routes';
@@ -33,7 +33,7 @@ async function buildServer(): Promise<void> {
       openapi: '3.0.0',
       info: {
         title: '☕ Query Toolkit Example API',
-        description: 'Demonstração oficial da biblioteca @raicamposs/query-toolkit com PostgreSQL e Fastify.',
+        description: 'Demonstração oficial da biblioteca @raicampos/query-toolkit com PostgreSQL e Fastify.',
         version: '1.0.0',
       },
       tags: [
@@ -65,7 +65,7 @@ async function buildServer(): Promise<void> {
   try {
     const address = await app.listen({ port, host });
     app.log.info(`🚀 Servidor iniciado em ${address}`);
-    app.log.info('📚 Showcase da biblioteca @raicamposs/query-toolkit');
+    app.log.info('📚 Showcase da biblioteca @raicampos/query-toolkit');
   } catch (error) {
     app.log.error(error);
     process.exit(1);

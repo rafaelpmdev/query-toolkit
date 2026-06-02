@@ -62,9 +62,9 @@ export class CursorPage {
     } else {
       rows.reverse(); // Desinverte a ordem para o usuário
       if (rows.length > limit) {
+        hasMore = true;
         rows.shift(); // Remove o item extra N+1 que ficou no início
       }
-      hasMore = true;
     }
 
     const hasNext = direction === 'next' ? hasMore : true;

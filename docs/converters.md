@@ -25,7 +25,7 @@ Este conversor transforma os operadores de domínio gerados no parsing diretamen
 Se você tiver múltiplos filtros aplicados sobre a mesma propriedade (por exemplo, na URL: `price=gt=10;price=lt=50`), um mapeamento simples substituiria a primeira propriedade pela segunda na serialização do objeto JS. O `QueryParamsPrismaConverter` possui uma lógica inteligente que **funde as condições de campos idênticos** em um único objeto estruturado.
 
 ```typescript
-import { QueryParamsParse, QueryParamsPrismaConverter } from '@raicamposs/query-toolkit';
+import { QueryParamsParse, QueryParamsPrismaConverter } from '@raicampos/query-toolkit';
 
 // 1. Filtros recebidos: idade maior ou igual a 18 E menor ou igual a 60
 const rawParams = {
@@ -50,7 +50,7 @@ const where = prismaConverter.build();
 Converte os operadores em uma lista de objetos `Clause` que podem ser fornecidos diretamente para o `SqlBuilder` montar queries relacionais seguras e parametrizadas de alta performance.
 
 ```typescript
-import { QueryParamsParse, QueryParamsSqlConverter, SqlBuilder } from '@raicamposs/query-toolkit';
+import { QueryParamsParse, QueryParamsSqlConverter, SqlBuilder } from '@raicampos/query-toolkit';
 
 const rawParams = {
   name: '~=John',
@@ -82,7 +82,7 @@ De acordo com os princípios de **Clean Architecture**, a camada de apresentaç�
 ### Repositório Prisma (`coffee-prisma.repository.ts`)
 ```typescript
 import { PrismaClient } from '@prisma/client';
-import { QueryParamsPrismaConverter } from '@raicamposs/query-toolkit';
+import { QueryParamsPrismaConverter } from '@raicampos/query-toolkitt';
 import { CoffeeFilters } from '../domain/coffee-filters';
 
 export class CoffeePrismaRepository {
@@ -103,7 +103,7 @@ export class CoffeePrismaRepository {
 ### Repositório SQL Nativo (`coffee-pg.repository.ts`)
 ```typescript
 import { Client } from 'pg';
-import { QueryParamsSqlConverter, SqlBuilder } from '@raicamposs/query-toolkit';
+import { QueryParamsSqlConverter, SqlBuilder } from '@raicampos/query-toolkitt';
 import { CoffeeFilters } from '../domain/coffee-filters';
 
 export class CoffeePgRepository {

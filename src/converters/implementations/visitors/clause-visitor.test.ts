@@ -141,4 +141,40 @@ describe('ClauseVisitor', () => {
     const result = visitor.visitUnknown(op, 'field');
     expect(result).toBeInstanceOf(ClauseEmpty);
   });
+
+  it('should wrap a single non-array value from visitIn into an array', () => {
+    const op = new InOperator('in=v1');
+    vi.spyOn(op, 'value').mockReturnValue('single-value' as any);
+    const result = visitor.visitIn(op, 'field');
+    expect(result).toBeInstanceOf(ClauseIn);
+    expect(result.build()?.sql).toContain('field IN');
+  });
+
+  it('should wrap a single non-array value from visitNotIn into an array', () => {
+    const op = new NotInOperator('out=v1');
+    vi.spyOn(op, 'value').mockReturnValue('single-value' as any);
+    const result = visitor.visitNotIn(op, 'field');
+    expect(result).toBeInstanceOf(ClauseNotIn);
+  });
+
+  it('should wrap a single non-array value from visitArrayContains into an array', () => {
+    const op = new ArrayContainsOperator('@>tag1');
+    vi.spyOn(op, 'value').mockReturnValue('tag1' as any);
+    const result = visitor.visitArrayContains(op, 'tags');
+    expect(result).toBeInstanceOf(ClauseArrayContains);
+  });
+
+  it('should wrap a single non-array value from visitArrayIsContainedBy into an array', () => {
+    const op = new ArrayIsContainedByOperator('<@tag1');
+    vi.spyOn(op, 'value').mockReturnValue('tag1' as any);
+    const result = visitor.visitArrayIsContainedBy(op, 'tags');
+    expect(result).toBeInstanceOf(ClauseArrayIsContainedBy);
+  });
+
+  it('should wrap a single non-array value from visitArrayOverlap into an array', () => {
+    const op = new ArrayOverlapOperator('&&tag1');
+    vi.spyOn(op, 'value').mockReturnValue('tag1' as any);
+    const result = visitor.visitArrayOverlap(op, 'tags');
+    expect(result).toBeInstanceOf(ClauseArrayOverlap);
+  });
 });

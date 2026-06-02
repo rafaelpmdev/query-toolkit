@@ -64,6 +64,14 @@ describe('RsqlStringParser', () => {
     });
   });
 
+  it('should parse correctly if field contains operator substring or if multiple operators are present', () => {
+    const parser = new RsqlStringParser('age==gt=10;name==');
+    expect(parser.parse()).toEqual({
+      age: '==gt=10',
+      name: '==',
+    });
+  });
+
   it('should parse complex query strings efficiently under high iteration load (stress test)', () => {
     const rawFilter = 'origin==Brazil;roast==MEDIUM;price=btw=20,60;tags=@>organic,premium';
     const start = performance.now();

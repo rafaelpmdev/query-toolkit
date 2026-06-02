@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { CoffeeRepositoryPg } from './coffee-pg.repository';
 import { pool } from '../../database';
-import { EqualsOperator, CursorPage } from '@raicamposs/query-toolkit';
+import { EqualsOperator, CursorPage } from '@raicampos/query-toolkit';
 import { ListCoffeesParams } from './coffee.repository';
 
 // Mock do pool de conexão com o PostgreSQL
@@ -35,7 +35,7 @@ describe('CoffeeRepositoryPg (PostgreSQL Native Repository Tests)', () => {
 
       const params: ListCoffeesParams = {
         params: {
-          name: [new EqualsOperator('Espresso')],
+          name: [new EqualsOperator<string>('Espresso')],
         },
         pagination: new CursorPage(10),
       };

@@ -71,4 +71,22 @@ describe('QueryParamsPrismaConverter', () => {
       },
     });
   });
+
+  describe('sort()', () => {
+    it('should convert a sort record into an array of Prisma orderBy objects', () => {
+      const converter = new QueryParamsPrismaConverter({});
+      const result = converter.sort({ name: 'asc', price: 'desc' });
+      expect(result).toEqual([{ name: 'asc' }, { price: 'desc' }]);
+    });
+
+    it('should return undefined when sort is undefined', () => {
+      const converter = new QueryParamsPrismaConverter({});
+      expect(converter.sort(undefined)).toBeUndefined();
+    });
+
+    it('should return null when sort is null', () => {
+      const converter = new QueryParamsPrismaConverter({});
+      expect(converter.sort(null as any)).toBeNull();
+    });
+  });
 });

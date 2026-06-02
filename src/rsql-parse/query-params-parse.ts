@@ -1,13 +1,49 @@
-import { coalesce, isEmpty, ObjectEntries } from '@raicamposs/toolkit';
-import { ClassicPage, CursorPage, SortDirection, SortParser } from '../common';
+import { coalesce, isEmpty, ObjectEntries } from '@raicampos/toolkit';
+import { ClassicPage, CursorPage, SortDirection } from '../common';
 import { QueryableFields, RsqlQueryParams } from '../common/types';
 import { QueryParamsOperator } from '../query-operator';
 import { OperatorRegistry } from './operator-registry';
+import { PaginationBuilder } from './pagination-builder';
+import { SortBuilder } from './sort-builder';
+import { ParamNormalizer } from './param-normalizer';
+import { ParamValidator } from './param-validator';
 
-export type ParamsOperators<T extends object> = Record<
-  Exclude<QueryableFields<T>, 'sort' | 'limit' | 'offset' | 'page' | 'cursor'>,
-  Array<QueryParamsOperator<unknown, unknown>>
->;
+import {
+  ArrayCondition,
+  BooleanCondition,
+  NumberCondition,
+  StringCondition,
+} from '../common/types/rsql-condition';
+
+export type FieldCondition<Val> = Val extends number
+  ? NumberCondition
+  : Val extends boolean
+    ? BooleanCondition
+    : Val extends unknown[]
+      ? ArrayCondition
+      : Val extends Date
+        ? StringCondition
+        : Val extends string
+          ? StringCondition
+          : unknown;
+
+export type FieldValue<Val> = Val extends number
+  ? number
+  : Val extends boolean
+    ? boolean
+    : Val extends unknown[]
+      ? string[]
+      : Val extends Date
+        ? string
+        : Val extends string
+          ? string
+          : unknown;
+
+export type ParamsOperators<T extends object> = {
+  [K in Exclude<QueryableFields<T>, 'sort' | 'limit' | 'offset' | 'page' | 'cursor'>]: Array<
+    QueryParamsOperator<FieldCondition<T[K]>, FieldValue<T[K]>>
+  >;
+};
 
 export type QueryParams<T extends object> = {
   params: ParamsOperators<T>;
@@ -31,8 +67,8 @@ export class QueryParamsParse<T extends object> {
       shape ? (Object.entries(shape) as [QueryableFields<T>, FieldTypes][]) : []
     );
     this.operators = this.buildParams();
-    this.sort = this.buildSort();
-    this.pagination = this.buildPagination();
+    this.sort = SortBuilder.build(this.params, this.validKeys);
+    this.pagination = PaginationBuilder.build(this.params);
   }
 
   get isClassicPage(): boolean {
@@ -64,95 +100,7 @@ export class QueryParamsParse<T extends object> {
   }
 
   public validate(): { success: boolean; errors: string[] } {
-    const validationErrors: string[] = [];
-    for (const [field, operators] of ObjectEntries(this.operators)) {
-      for (const operator of operators as Array<QueryParamsOperator<unknown, unknown>>) {
-        const parseResult = operator.safeParse();
-
-        if (!parseResult.success) {
-          validationErrors.push(`Field '${field}': ${parseResult.error}`);
-          continue;
-        }
-
-        const expectedType = this.validKeys.get(field as QueryableFields<T>);
-
-        if (expectedType) {
-          const value = operator.value();
-          const baseType = expectedType.replace('[]', '');
-
-          const checkType = (v: unknown) => {
-            if (baseType === 'date') return v instanceof Date;
-            return typeof v === baseType;
-          };
-
-          const isInvalid = Array.isArray(value)
-            ? value.some((v) => !checkType(v))
-            : !checkType(value);
-
-          if (isInvalid) {
-            validationErrors.push(`Field '${field}': expected type '${expectedType}'.`);
-          }
-        }
-      }
-    }
-
-    return {
-      success: validationErrors.length === 0,
-      errors: validationErrors,
-    };
-  }
-
-  private buildSort(): Record<QueryableFields<T>, SortDirection> | undefined {
-    if ('sort' in this.params) {
-      if (typeof this.params.sort !== 'string') {
-        return undefined;
-      }
-
-      const sort = SortParser.parse(this.params.sort);
-
-      return ObjectEntries(sort).reduce(
-        (acc, [key, value]) => {
-          if (this.validKeys.size === 0 || this.validKeys.has(key as QueryableFields<T>)) {
-            acc[key as QueryableFields<T>] = value;
-          }
-          return acc;
-        },
-        {} as Record<QueryableFields<T>, SortDirection>
-      );
-    }
-
-    return undefined;
-  }
-
-  private buildPagination(): ClassicPage | CursorPage | undefined {
-    if ('limit' in this.params && 'page' in this.params) {
-      const limit = Number(this.params.limit);
-      const page = Number(this.params.page);
-      if (Number.isNaN(limit) || Number.isNaN(page)) {
-        return undefined;
-      }
-      return new ClassicPage(limit, page);
-    }
-
-    if ('limit' in this.params && 'offset' in this.params) {
-      const limit = Number(this.params.limit);
-      const offset = Number(this.params.offset);
-      if (Number.isNaN(limit) || Number.isNaN(offset)) {
-        return undefined;
-      }
-      return ClassicPage.fromOffset(offset, limit);
-    }
-
-    if ('limit' in this.params || 'cursor' in this.params) {
-      const limit = 'limit' in this.params ? Number(this.params.limit) : 20;
-      const cursor = 'cursor' in this.params ? (this.params.cursor as string) : undefined;
-      if (Number.isNaN(limit)) {
-        return undefined;
-      }
-      return new CursorPage(limit, cursor);
-    }
-
-    return undefined;
+    return ParamValidator.validate(this.operators, this.validKeys);
   }
 
   private buildParams(): ParamsOperators<T> {
@@ -165,20 +113,30 @@ export class QueryParamsParse<T extends object> {
 
       if (this.validKeys.size > 0 && !this.validKeys.has(key as QueryableFields<T>)) return acc;
 
+      const expectedType = this.validKeys.get(key as QueryableFields<T>);
+      const isBoolean = expectedType === 'boolean';
+
+      const normalizeValue = (val: string): string => {
+        if (isBoolean) {
+          return ParamNormalizer.normalizeRsqlBooleanString(val);
+        }
+        return val;
+      };
+
       if (Array.isArray(value)) {
         if (!acc[key]) {
           acc[key] = [];
         }
         value.forEach((item: string) => {
-          acc[key].push(OperatorRegistry.resolve(item));
+          acc[key].push(OperatorRegistry.resolve(normalizeValue(item)));
         });
         return acc;
       }
-      acc[key] = [OperatorRegistry.resolve(value as string)];
+      acc[key] = [OperatorRegistry.resolve(normalizeValue(value as string))];
       return acc;
     }, output);
 
-    return output as Record<QueryableFields<T>, Array<QueryParamsOperator<unknown, unknown>>>;
+    return output as unknown as ParamsOperators<T>;
   }
 
   /**
@@ -189,7 +147,10 @@ export class QueryParamsParse<T extends object> {
     const queryParams: Record<
       string,
       Array<QueryParamsOperator<unknown, unknown>>
-    > = this.buildParams();
+    > = this.buildParams() as unknown as Record<
+      string,
+      Array<QueryParamsOperator<unknown, unknown>>
+    >;
     return ObjectEntries(queryParams)
       .map(([key, value]) => {
         const query = value

@@ -41,3 +41,5 @@ Tratamento rigoroso de null vs undefined na geração das queries.
 ❌ Proibido criar dependências circulares entre o Builder e o Compiler.
 
 ❌ Proibido usar any no TypeScript; defina interfaces claras para as cláusulas.
+
+❌ Proibido usar type casts forçados ou evasivos (ex: `as unknown as Type`), pois isso mascara bugs e quebra o contrato das classes. Exija sempre tipagem estrita e correta.

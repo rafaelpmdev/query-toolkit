@@ -1,4 +1,4 @@
-# 🤝 Contribuindo com o @raicamposs/query-toolkit
+# 🤝 Contribuindo com o @raicampos/query-toolkit
 
 Obrigado pelo seu interesse em contribuir! Este toolkit foi projetado para ser robusto, extensível e seguro. Para mantermos o alto nível de qualidade do código, pedimos que siga nossas diretrizes de arquitetura e qualidade.
 
@@ -8,7 +8,7 @@ Ao propor uma mudança ou nova funcionalidade, lembre-se:
 1. **Responsabilidade Única (SRP)**: Não misture regras de parseamento de URL com regras de geração SQL/Prisma.
 2. **Independência de Frameworks**: A camada de domínio (ex: operadores RSQL) não deve conhecer detalhes de bibliotecas externas de banco de dados. Para isso usamos o padrão **Visitor**.
 3. **Fail-Fast**: Valide argumentos cedo e lance erros explícitos imediatamente caso os limites de segurança ou tipagem sejam desrespeitados.
-4. **Tipagem Estrita**: Evite `any`. Mantenha o sistema fortemente tipado para que o TypeScript guie o desenvolvedor no uso correto da ferramenta.
+4. **Tipagem Estrita**: Evite `any`. Mantenha o sistema fortemente tipado para que o TypeScript guie o desenvolvedor no uso correto da ferramenta. Nunca utilize asserções de tipo forçadas/evasivas (ex: `as unknown as Type`), pois elas mascaram bugs e quebram a integridade dos contratos de classes e interfaces.
 
 ## 🧪 Test-Driven Development (TDD) e Cobertura
 

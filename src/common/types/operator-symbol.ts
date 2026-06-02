@@ -1,4 +1,4 @@
-import { ValueOf } from '@raicamposs/toolkit';
+import { ValueOf } from '@raicampos/toolkit';
 
 // Equality (==) : equals
 // Inequality (!=) : not equals

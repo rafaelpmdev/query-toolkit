@@ -1,4 +1,4 @@
-import { RequireAtLeastOne } from '@raicamposs/toolkit';
+import { RequireAtLeastOne } from '@raicampos/toolkit';
 import {
   ArrayContainsCondition,
   ArrayIsContainedByCondition,

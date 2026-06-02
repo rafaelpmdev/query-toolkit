@@ -1,4 +1,4 @@
-import { roundABNT } from '@raicamposs/toolkit';
+import { roundABNT } from '@raicampos/toolkit';
 import { describe, expect, it } from 'vitest';
 import { ClauseCondition } from './clause-condition';
 

@@ -118,6 +118,10 @@ export class RsqlStringParser<T = unknown> {
     return { field, rawValue };
   }
 
+  private isLowerCaseLetter(char: string): boolean {
+    return /^[a-z]$/.test(char);
+  }
+
   /**
    * Localiza o índice e o símbolo do primeiro operador RSQL válido presente em um fragmento.
    * @param part Expressão de condição bruta.
@@ -131,9 +135,7 @@ export class RsqlStringParser<T = unknown> {
       let index = -1;
       let startSearch = 0;
 
-      // Micro-otimização: verifica se o operador inicia com uma letra minúscula (a-z) sem usar RegExp dinâmico
-      const firstCharCode = op.charCodeAt(0);
-      const isTextOp = firstCharCode >= 97 && firstCharCode <= 122;
+      const isTextOp = this.isLowerCaseLetter(op.charAt(0));
 
       while (true) {
         index = part.indexOf(op, startSearch);

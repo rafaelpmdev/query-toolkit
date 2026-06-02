@@ -1,4 +1,4 @@
-import { isAssigned, Nullable } from '@raicamposs/toolkit';
+import { isAssigned, Nullable } from '@raicampos/toolkit';
 import { PrimitiveValueType } from '../../common/types/primitive-value';
 import { SqlPrimitiveValue } from './sql-primitive-value';
 import { TransformFunction } from './transform-function';

@@ -17,7 +17,7 @@ O `MapperBuilder` atua como um **Interface Adapter**, desacoplando as camadas de
 Você define um dicionário de mapeamento onde as chaves representam o **Modelo de Domínio** (público) e os valores apontam para as colunas da **Entidade Física** (banco de dados/infraestrutura).
 
 ```typescript
-import { MapperBuilder } from '@raicamposs/query-toolkit';
+import { MapperBuilder } from '@raicampos/query-toolkit';
 
 // Dicionário de mapeamento
 const userMapping = {
@@ -79,7 +79,7 @@ Ao trabalhar com filtros dinâmicos recebidos na URL, você pode reaproveitar o 
 O `SqlBuilder` aceita o mapeamento do `MapperBuilder` como segundo argumento no construtor. Ele traduzirá dinamicamente todas as cláusulas lógicas informadas na listagem:
 
 ```typescript
-import { MapperBuilder, SqlBuilder, QueryParamsSqlConverter } from '@raicamposs/query-toolkit';
+import { MapperBuilder, SqlBuilder, QueryParamsSqlConverter } from '@raicampos/uery-toolkit';
 
 // 1. Definição do Mapeador de Domínio para Persistência
 const mapping = {

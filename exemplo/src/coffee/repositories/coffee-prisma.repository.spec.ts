@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { CoffeeRepositoryPrisma } from './coffee-prisma.repository';
 import { prisma } from '../../database';
-import { EqualsOperator, CursorPage } from '@raicamposs/query-toolkit';
+import { EqualsOperator, CursorPage } from '@raicampos/query-toolkit';
 import { ListCoffeesParams } from './coffee.repository';
 
 // Mock do prisma client
@@ -38,7 +38,7 @@ describe('CoffeeRepositoryPrisma (Prisma Repository Tests)', () => {
 
       const params: ListCoffeesParams = {
         params: {
-          name: [new EqualsOperator('Espresso')]
+          name: [new EqualsOperator<string>('Espresso')]
         },
         pagination: new CursorPage(5)
       };

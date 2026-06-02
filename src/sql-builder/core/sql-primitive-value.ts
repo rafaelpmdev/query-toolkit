@@ -1,4 +1,4 @@
-import { isAssigned, isNullOrUndefined, Nullable } from '@raicamposs/toolkit';
+import { isAssigned, isNullOrUndefined, Nullable } from '@raicampos/toolkit';
 import { SqlInjectionDetector } from '../../common/sql-injection-detector';
 import { PrimitiveValueType } from '../../common/types/primitive-value';
 import { TransformFunction } from './transform-function';

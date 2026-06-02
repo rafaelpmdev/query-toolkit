@@ -1,4 +1,4 @@
-import { Nullable } from '@raicamposs/toolkit';
+import { Nullable } from '@raicampos/toolkit';
 import { describe, expect, it } from 'vitest';
 import { RsqlCondition } from '../common/types';
 import { OperatorVisitor } from '../converters';
@@ -42,5 +42,10 @@ describe('QueryParamsOperator Base Class', () => {
   it('deve retornar os params inteiros em getRawValue se o symbol nao estiver presente nos params', () => {
     const operator = new MockOperator('==', 'only_value');
     expect(operator.testGetRawValue()).toBe('only_value');
+  });
+
+  it('deve extrair o valor corretamente mesmo se o valor contiver o caractere do operador RSQL', () => {
+    const operator = new MockOperator('==', '==valor==anomalo');
+    expect(operator.testGetRawValue()).toBe('valor==anomalo');
   });
 });

@@ -1,4 +1,4 @@
-# @raicamposs/query-toolkit
+# @raicampos/query-toolkit
 
 A powerful TypeScript toolkit for building database queries. It provides tools for RSQL parsing, SQL building, and data mapping.
 
@@ -13,15 +13,15 @@ A powerful TypeScript toolkit for building database queries. It provides tools f
 ## Installation
 
 ```bash
-npm install @raicamposs/query-toolkit
+npm install @raicampos/query-toolkit
 ```
 
 ## 🛡️ Parameterized Queries (Recommended)
 
-`@raicamposs/query-toolkit` supports parameterized queries, which are crucial for preventing SQL injection.
+`@raicampos/query-toolkit` supports parameterized queries, which are crucial for preventing SQL injection.
 
 ```typescript
-import { SqlBuilder, ClauseEquals, ClauseGreaterThan } from '@raicamposs/query-toolkit';
+import { SqlBuilder, ClauseEquals, ClauseGreaterThan } from '@raicampos/query-toolkit';
 
 const builder = new SqlBuilder('users');
 builder.add(new ClauseEquals('status', 'active'));
@@ -41,7 +41,7 @@ const { sql, params } = builder.build();
 Build complex SQL queries with a fluent interface.
 
 ```typescript
-import { SqlBuilder } from '@raicamposs/query-toolkit';
+import { SqlBuilder } from '@raicampos/query-toolkit';
 
 const builder = new SqlBuilder('SELECT * FROM users');
 
@@ -60,7 +60,7 @@ const sql = builder.build();
 Parse RSQL parameters from URL query strings.
 
 ```typescript
-import { QueryParamsParse } from '@raicamposs/query-toolkit';
+import { QueryParamsParse } from '@raicampos/query-toolkit';
 
 const params = {
   name: '==John',
@@ -77,7 +77,7 @@ const operators = parser.build(); // Record<string, QueryParamsOperator[]>
 Map your database entities to clean domain models.
 
 ```typescript
-import { MapperBuilder } from '@raicamposs/query-toolkit';
+import { MapperBuilder } from '@raicampos/query-toolkit';
 
 const userMapper = {
   id: 'user_id',
@@ -98,7 +98,7 @@ const model = builder.entityToModel({
 Convert query parameter operators into target formats (like Prisma Where query object or SQL query Clauses) using specialized, type-safe converters that leverage the Visitor pattern under the hood.
 
 ```typescript
-import { QueryParamsParse, QueryParamsPrismaConverter, QueryParamsSqlConverter } from '@raicamposs/query-toolkit';
+import { QueryParamsParse, QueryParamsPrismaConverter, QueryParamsSqlConverter } from '@raicampos/query-toolkit';
 
 const params = {
   status: '==active',
@@ -122,7 +122,7 @@ const clauses = sqlConverter.build(); // Record<string, Clause[]>
 Robust and dynamic pagination using both **Classic** (offset/limit) and **Cursor-based** (bidirectional, minified base64) strategies.
 
 ```typescript
-import { CursorPage, ClassicPage } from '@raicamposs/query-toolkit';
+import { CursorPage, ClassicPage } from '@raicampos/query-toolkit';
 
 // A. Cursor Pagination (Highly performant for infinite scrolls & large datasets)
 // The library natively decodes, encodes, and minimizes the cursors strictly to the requested columns.
@@ -150,7 +150,7 @@ console.log(classicPagination.offset); // 20
 Leverage TypeScript to ensure you only query valid fields from your entities.
 
 ```typescript
-import { SqlBuilder, QueryableFields } from '@raicamposs/query-toolkit';
+import { SqlBuilder, QueryableFields } from '@raicampos/query-toolkit';
 
 interface User {
   id: number;
@@ -182,7 +182,7 @@ const builder = new SqlBuilder<User>('users', undefined, {
 Parse full RSQL strings easily with `RsqlStringParser`.
 
 ```typescript
-import { RsqlStringParser, QueryParamsParse } from '@raicamposs/query-toolkit';
+import { RsqlStringParser, QueryParamsParse } from '@raicampos/query-toolkit';
 
 const filter = "name==John;age=gt=18;status=in=ACTIVE,PENDING";
 const parser = new RsqlStringParser(filter);
@@ -207,7 +207,7 @@ import {
   RsqlStringParser,
   QueryParamsParse,
   QueryParamsPrismaConverter,
-} from '@raicamposs/query-toolkit';
+} from '@raicampos/query-toolkit';
 
 // URL: /users?filter=status==ACTIVE;age=gte=18;role=in=ADMIN,MANAGER
 const rawParams = new RsqlStringParser(req.query.filter).parse();
@@ -247,7 +247,7 @@ const users = await prisma.user.findMany({ where });
 
 ```typescript
 import { PipeTransform, Injectable, ArgumentMetadata } from '@nestjs/common';
-import { RsqlStringParser, QueryParamsParse, QueryParamsConverter } from '@raicamposs/query-toolkit';
+import { RsqlStringParser, QueryParamsParse, QueryParamsConverter } from '@raicampos/query-toolkit';
 
 @Injectable()
 export class RsqlPipe implements PipeTransform {
@@ -266,13 +266,13 @@ export class RsqlPipe implements PipeTransform {
 
 The package supports clean subpath exports:
 
-- `@raicamposs/query-toolkit/common` - Utilities like `parseRsqlValue` and SQL Injection detectors
-- `@raicamposs/query-toolkit/converters` - Visitors (`ClauseVisitor`, `PrismaVisitor`), `QueryParamsConverter`, `QueryParamsPrismaConverter`, and `QueryParamsSqlConverter`
-- `@raicamposs/query-toolkit/mappers` - `MapperBuilder` and data mapping
-- `@raicamposs/query-toolkit/query-operator` - Individual modular operator implementations (Equals, GreaterThan, etc.)
-- `@raicamposs/query-toolkit/rsql-parse` - `QueryParamsParse`, `RsqlStringParser`, and static `OperatorRegistry`
-- `@raicamposs/query-toolkit/sql-builder` - `SqlBuilder` and SQL clauses (`ClauseAnd`, `ClauseOr`, etc.)
-- `@raicamposs/query-toolkit/types` - Type definitions, `QueryableFields`, and `OperatorSymbol`
+- `@raicampos/query-toolkit/common` - Utilities like `parseRsqlValue` and SQL Injection detectors
+- `@raicampos/query-toolkit/converters` - Visitors (`ClauseVisitor`, `PrismaVisitor`), `QueryParamsConverter`, `QueryParamsPrismaConverter`, and `QueryParamsSqlConverter`
+- `@raicampos/query-toolkit/mappers` - `MapperBuilder` and data mapping
+- `@raicampos/query-toolkit/query-operator` - Individual modular operator implementations (Equals, GreaterThan, etc.)
+- `@raicampos/query-toolkit/rsql-parse` - `QueryParamsParse`, `RsqlStringParser`, and static `OperatorRegistry`
+- `@raicampos/query-toolkit/sql-builder` - `SqlBuilder` and SQL clauses (`ClauseAnd`, `ClauseOr`, etc.)
+- `@raicampos/query-toolkit/types` - Type definitions, `QueryableFields`, and `OperatorSymbol`
 
 ## 📄 License
 

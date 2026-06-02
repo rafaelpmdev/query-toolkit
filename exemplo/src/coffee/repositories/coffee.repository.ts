@@ -1,5 +1,5 @@
-import { ArrayCondition, BooleanCondition, CursorPage, NumberCondition, QueryParamsOperator, SortDirection, StringCondition } from "@raicamposs/query-toolkit";
-import { Nullable } from "@raicamposs/toolkit";
+import { ArrayCondition, BooleanCondition, CursorPage, NumberCondition, QueryParamsOperator, SortDirection, StringCondition } from "@raicampos/query-toolkit";
+import { Nullable } from "@raicampos/toolkit";
 import { CreateCoffeeData } from "../dto/create-coffee-data";
 import { Coffee } from "../entities/coffee";
 

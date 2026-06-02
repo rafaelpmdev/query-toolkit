@@ -42,4 +42,23 @@ describe('SortParser', () => {
       price: 'desc',
     });
   });
+
+  it('deve ignorar entradas que resultam em campo vazio após remover o prefixo de sinal', () => {
+    expect(SortParser.parse('-')).toEqual({});
+    expect(SortParser.parse('+')).toEqual({});
+    expect(SortParser.parse('-  ')).toEqual({});
+    expect(SortParser.parse('+  ')).toEqual({});
+  });
+
+  it('deve ignorar entradas no formato colon com campo vazio (:asc)', () => {
+    expect(SortParser.parse(':asc')).toEqual({});
+    expect(SortParser.parse(':desc')).toEqual({});
+  });
+
+  it('deve filtrar entradas inválidas mas manter as válidas na mesma string', () => {
+    expect(SortParser.parse('name:asc,-,price:desc')).toEqual({
+      name: 'asc',
+      price: 'desc',
+    });
+  });
 });

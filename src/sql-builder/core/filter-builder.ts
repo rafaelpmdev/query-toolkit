@@ -1,4 +1,4 @@
-import { isEmpty, isNullOrUndefined } from '@raicamposs/toolkit';
+import { isEmpty, isNullOrUndefined } from '@raicampos/toolkit';
 import { QueryableFields } from '../../common/types';
 import {
   BetweenParam,

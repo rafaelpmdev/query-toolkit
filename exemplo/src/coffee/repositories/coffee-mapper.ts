@@ -1,5 +1,5 @@
 import { Coffee as PrismaCoffee } from '@prisma/client';
-import { mapAllOr } from '@raicamposs/toolkit';
+import { mapAllOr } from '@raicampos/toolkit';
 import { MapperBuilder } from '../../../../dist';
 import { Coffee } from '../entities/coffee';
 

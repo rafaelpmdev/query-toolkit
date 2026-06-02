@@ -1,13 +1,12 @@
-import { Nullable } from '@raicamposs/toolkit';
+import { Nullable } from '@raicampos/toolkit';
 import { EqualsCondition } from '../../common/types';
 import { PrimitiveValue, PrimitiveValueType } from '../../common/types/primitive-value';
 import type { OperatorVisitor } from '../../converters';
 import { QueryParamsOperator, QueryParamsOperatorSafeParse } from '../query-params-operator';
 
-export class EqualsOperator extends QueryParamsOperator<
-  EqualsCondition<PrimitiveValueType>,
-  PrimitiveValueType
-> {
+export class EqualsOperator<
+  ValueType extends PrimitiveValueType = PrimitiveValueType,
+> extends QueryParamsOperator<EqualsCondition<ValueType>, ValueType> {
   private stateValue: PrimitiveValue;
 
   constructor(params: string) {
@@ -15,7 +14,7 @@ export class EqualsOperator extends QueryParamsOperator<
     this.stateValue = PrimitiveValue.converter(this.getRawValue());
   }
 
-  safeParse(): QueryParamsOperatorSafeParse<PrimitiveValueType> {
+  safeParse(): QueryParamsOperatorSafeParse<ValueType> {
     const value = this.value();
     if (value === null || value === undefined) {
       return { success: false, error: `Invalid value for ${this.symbol} operator` };
@@ -26,11 +25,11 @@ export class EqualsOperator extends QueryParamsOperator<
     return { success: true, value };
   }
 
-  value(): Nullable<PrimitiveValueType> {
-    return this.stateValue.getValue();
+  value(): Nullable<ValueType> {
+    return this.stateValue.getValue() as Nullable<ValueType>;
   }
 
-  query(): Nullable<EqualsCondition<PrimitiveValueType>> {
+  query(): Nullable<EqualsCondition<ValueType>> {
     const value = this.value();
     if (value === null || value === undefined) return null;
     return { equals: value };
