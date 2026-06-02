@@ -6,6 +6,7 @@ exemplo/
 .instructions/
 .agent/
 .vscode/
+.husky/
 
 # Arquivos de configuração de desenvolvimento
 *.test.ts
@@ -13,6 +14,7 @@ exemplo/
 vitest.config.ts
 tsconfig.json
 eslint.config.mjs
+commitlint.config.js
 .prettierrc
 .prettierignore
 .gitattributes
