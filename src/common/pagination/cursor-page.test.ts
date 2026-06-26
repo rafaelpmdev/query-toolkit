@@ -210,6 +210,47 @@ describe('CursorPage', () => {
     });
   });
 
+  describe('resolveOrderBy', () => {
+    it('should return undefined when orderBy is undefined', () => {
+      expect(CursorPage.resolveOrderBy(undefined, 'next')).toBeUndefined();
+      expect(CursorPage.resolveOrderBy(undefined, 'prev')).toBeUndefined();
+    });
+
+    it('should return orderBy unchanged when direction is next', () => {
+      const orderBy: Array<Record<string, 'asc' | 'desc'>> = [{ id: 'asc' }, { name: 'desc' }];
+      const result = CursorPage.resolveOrderBy(orderBy, 'next');
+      expect(result).toEqual(orderBy);
+    });
+
+    it('should invert asc to desc when direction is prev', () => {
+      const result = CursorPage.resolveOrderBy([{ id: 'asc' as const }], 'prev');
+      expect(result).toEqual([{ id: 'desc' }]);
+    });
+
+    it('should invert desc to asc when direction is prev', () => {
+      const result = CursorPage.resolveOrderBy([{ createdAt: 'desc' as const }], 'prev');
+      expect(result).toEqual([{ createdAt: 'asc' }]);
+    });
+
+    it('should invert all fields in each entry when direction is prev', () => {
+      const orderBy = [{ name: 'asc' as const, age: 'desc' as const }];
+      const result = CursorPage.resolveOrderBy(orderBy, 'prev');
+      expect(result).toEqual([{ name: 'desc', age: 'asc' }]);
+    });
+
+    it('should invert each entry independently when direction is prev', () => {
+      const orderBy: Array<Record<string, 'asc' | 'desc'>> = [{ id: 'asc' }, { createdAt: 'desc' }];
+      const result = CursorPage.resolveOrderBy(orderBy, 'prev');
+      expect(result).toEqual([{ id: 'desc' }, { createdAt: 'asc' }]);
+    });
+
+    it('should not mutate the original orderBy array', () => {
+      const orderBy = [{ id: 'asc' as const }];
+      CursorPage.resolveOrderBy(orderBy, 'prev');
+      expect(orderBy).toEqual([{ id: 'asc' }]);
+    });
+  });
+
   describe('Constructor with prevCursor and nextCursor', () => {
     it('should store prevCursor and nextCursor provided in constructor', () => {
       const page = new CursorPage(10, undefined, 'prev-tok', 'next-tok');

@@ -30,6 +30,19 @@ export class CursorPage {
     return CursorCodec.decode(this.cursor);
   }
 
+  static resolveOrderBy(
+    orderBy: Array<Record<string, 'asc' | 'desc'>> | undefined,
+    direction: 'next' | 'prev'
+  ): Array<Record<string, 'asc' | 'desc'>> | undefined {
+    if (!orderBy || direction === 'next') return orderBy;
+    return orderBy.map(
+      (entry) =>
+        Object.fromEntries(
+          Object.entries(entry).map(([k, v]) => [k, v === 'asc' ? 'desc' : 'asc'])
+        ) as Record<string, 'asc' | 'desc'>
+    );
+  }
+
   static encodeNext(
     lastRow: Record<string, unknown>,
     orderBy: Record<string, 'asc' | 'desc'>
